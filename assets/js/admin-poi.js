@@ -14,7 +14,7 @@ const state = {
 function getMinorCategoryOptions(selected = "") {
   const items = ["", "WC", "Ban ve", "Gui xe", "Ben thuyen"];
   return items
-    .map((item) => `<option value="${item}" ${selected === item ? "selected" : ""}>${item || "-- Chon --"}</option>`)
+    .map((item) => `<option value="${item}" ${selected === item ? "selected" : ""}>${item || "-- Chọn --"}</option>`)
     .join("");
 }
 
@@ -40,11 +40,11 @@ function renderTable() {
           <td>${poi.latitude ?? ""}</td>
           <td>${poi.longitude ?? ""}</td>
           <td>${poi.radius ?? 0} m</td>
-          <td>${poi.classification === "minor" ? "Phu" : "Chinh"}</td>
+          <td>${poi.classification === "minor" ? "Phụ" : "Chính"}</td>
           <td>${sanitizeText(poi.minor_category || "")}</td>
           <td>
-            <button class="btn edit" data-action="edit" data-id="${poi.id}">Sua</button>
-            <button class="btn delete" data-action="delete" data-id="${poi.id}">Xoa</button>
+            <button class="btn edit" data-action="edit" data-id="${poi.id}">Sửa</button>
+            <button class="btn delete" data-action="delete" data-id="${poi.id}">Xóa</button>
           </td>
         </tr>
       `;
@@ -143,7 +143,7 @@ async function savePoi(event) {
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
-    showToast("Vui long nhap du thong tin va chon vi tri tren ban do.", "delete");
+    showToast("Vui lòng nhập đủ thông tin và chọn vị trí trên bản đồ.", "delete");
     return;
   }
 
@@ -173,16 +173,16 @@ async function savePoi(event) {
       }
     }
 
-    showToast(state.editingPoiId ? "Cap nhat POI thanh cong" : "Them POI thanh cong", "add");
+    showToast(state.editingPoiId ? "Cập nhật POI thành công" : "Thêm POI thành công", "add");
     closeForm();
     await loadPois();
   } catch (error) {
-    showToast(error.message || "Khong the luu POI", "delete");
+    showToast(error.message || "Không thể lưu POI", "delete");
   }
 }
 
 async function removePoi(id) {
-  const yes = confirm("Xac nhan xoa POI nay?");
+  const yes = confirm("Xác nhận xóa POI này?");
   if (!yes) return;
 
   try {
@@ -194,7 +194,7 @@ async function removePoi(id) {
 
     if (linkError) throw linkError;
     if (links && links.length > 0) {
-      showToast("Khong the xoa POI vi dang duoc dung trong tour", "delete");
+      showToast("Không thể xóa POI vì nó đang được sử dụng trong tour", "delete");
       return;
     }
 
@@ -207,10 +207,10 @@ async function removePoi(id) {
     const { error } = await supabase.from(TABLES.POI).delete().eq("id", id);
     if (error) throw error;
 
-    showToast("Xoa POI thanh cong", "add");
+    showToast("Xóa POI thành công", "add");
     await loadPois();
   } catch (error) {
-    showToast(error.message || "Khong the xoa POI", "delete");
+    showToast(error.message || "Không thể xóa POI", "delete");
   }
 }
 
@@ -227,7 +227,7 @@ async function initPoiPage() {
   await loadPois();
 
   document.getElementById("search-poi").addEventListener("input", renderTable);
-  document.getElementById("btn-open-add").addEventListener("click", () => openForm("Them POI"));
+  document.getElementById("btn-open-add").addEventListener("click", () => openForm("Thêm POI"));
   document.getElementById("btn-cancel-poi").addEventListener("click", closeForm);
   document.getElementById("poi-form").addEventListener("submit", savePoi);
 
@@ -238,7 +238,7 @@ async function initPoiPage() {
     const id = Number(button.dataset.id);
     if (button.dataset.action === "edit") {
       const poi = state.pois.find((item) => item.id === id);
-      openForm("Sua POI", poi);
+      openForm("Sửa POI", poi);
     }
 
     if (button.dataset.action === "delete") {

@@ -75,7 +75,7 @@
 }
 
 .tour-panel .controls button {
-    background: #2563eb;
+    background: #7c3aed;
     color: #fff;
     border: none;
     border-radius: 14px;
@@ -85,7 +85,7 @@
 }
 
 .tour-panel .controls button:hover {
-    background: #1d4ed8;
+    background: #6d28d9;
 }
 
 .tour-panel .hint {
@@ -133,7 +133,7 @@
 .tour-panel button[type='submit'] {
     width: 100%;
     margin-top: 18px;
-    background: #2563eb;
+    background: #7c3aed;
     color: white;
     border: none;
     border-radius: 16px;

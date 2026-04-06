@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quan ly Tour</title>
+  <title>Quản lý Tours</title>
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="../assets/tour.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
@@ -16,8 +16,8 @@
       <div class="main-content">
         <section class="table-container">
           <div class="top-actions">
-            <h2>Quan ly Tour</h2>
-            <button id="btn-open-add-tour" class="btn add">Tao Tour moi</button>
+            <h2>Quản lý Tour</h2>
+            <button id="btn-open-add-tour" class="btn add">Tạo Tour mới</button>
           </div>
 
           <div id="tour-form-panel" class="form-panel hidden">
@@ -25,30 +25,30 @@
             <div class="tour-builder">
               <div class="tour-panel">
                 <form id="tour-form">
-                  <label for="tour-name">Ten Tour</label>
+                  <label for="tour-name">Tên Tour</label>
                   <input id="tour-name" required>
 
-                  <label for="tour-description">Mo ta</label>
+                  <label for="tour-description">Mô tả</label>
                   <textarea id="tour-description" rows="4"></textarea>
 
-                  <label for="poi-select">Chon POI</label>
+                  <label for="poi-select">Chọn POI</label>
                   <div class="controls">
                     <select id="poi-select"></select>
-                    <button id="add-poi-btn" type="button">Them vao lo trinh</button>
+                    <button id="add-poi-btn" type="button">Thêm vào lộ trình</button>
                   </div>
 
-                  <div class="hint">Can toi thieu 2 POI trong 1 tour.</div>
+                  <div class="hint">Cần tối thiểu 2 POI trong 1 tour.</div>
                   <ul id="tour-poi-list"></ul>
 
                   <div class="button-row">
-                    <button type="submit">Luu Tour</button>
-                    <button id="btn-cancel-tour" type="button" class="btn reset">Huy</button>
+                    <button type="submit">Lưu Tour</button>
+                    <button id="btn-cancel-tour" type="button" class="btn reset">Hủy</button>
                   </div>
                 </form>
               </div>
 
               <div class="tour-map">
-                <h3>Ban do POI</h3>
+                <h3>Bản đồ POI</h3>
                 <div id="tour-map"></div>
               </div>
             </div>
@@ -58,10 +58,10 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Ten Tour</th>
-                <th>Mo ta</th>
-                <th>Lo trinh</th>
-                <th>Hanh dong</th>
+                <th>Tên Tour</th>
+                <th>Mô tả</th>
+                <th>Lộ trình</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody id="tour-table-body"></tbody>

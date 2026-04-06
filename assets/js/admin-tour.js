@@ -41,8 +41,8 @@ function renderTourList() {
           <td>${sanitizeText(tour.description || "")}</td>
           <td>${sanitizeText(route || "-")}</td>
           <td>
-            <button class="btn edit" data-action="edit" data-id="${tour.id}">Sua</button>
-            <button class="btn delete" data-action="delete" data-id="${tour.id}">Xoa</button>
+            <button class="btn edit" data-action="edit" data-id="${tour.id}">Sửa</button>
+            <button class="btn delete" data-action="delete" data-id="${tour.id}">Xóa</button>
           </td>
         </tr>
       `;
@@ -143,7 +143,7 @@ async function saveTour(event) {
   const description = document.getElementById("tour-description").value.trim();
 
   if (!name || state.selectedPoiIds.length < 2) {
-    showToast("Ten tour va it nhat 2 POI la bat buoc.", "delete");
+    showToast("Tên tour và ít nhất 2 POI là bắt buộc.", "delete");
     return;
   }
 
@@ -171,16 +171,16 @@ async function saveTour(event) {
     const { error: rowError } = await supabase.from(TABLES.TOUR_POI).insert(rows);
     if (rowError) throw rowError;
 
-    showToast(state.editingTourId ? "Cap nhat tour thanh cong" : "Tao tour thanh cong", "add");
+    showToast(state.editingTourId ? "Cập nhật tour thành công" : "Tạo tour thành công", "add");
     closeTourForm();
     await loadTourData();
   } catch (error) {
-    showToast(error.message || "Khong the luu tour", "delete");
+    showToast(error.message || "Không thể lưu tour", "delete");
   }
 }
 
 async function removeTour(tourId) {
-  if (!confirm("Xac nhan xoa tour nay?")) return;
+  if (!confirm("Xác nhận xóa tour này?")) return;
 
   try {
     const { error: relError } = await supabase.from(TABLES.TOUR_POI).delete().eq("tour_id", tourId);
@@ -189,10 +189,10 @@ async function removeTour(tourId) {
     const { error } = await supabase.from(TABLES.TOUR).delete().eq("id", tourId);
     if (error) throw error;
 
-    showToast("Xoa tour thanh cong", "add");
+    showToast("Xóa tour thành công", "add");
     await loadTourData();
   } catch (error) {
-    showToast(error.message || "Khong the xoa tour", "delete");
+    showToast(error.message || "Không thể xóa tour", "delete");
   }
 }
 
@@ -229,7 +229,7 @@ function initMapPicker() {
 }
 
 function bindEvents() {
-  document.getElementById("btn-open-add-tour").addEventListener("click", () => openTourForm("Tao Tour"));
+  document.getElementById("btn-open-add-tour").addEventListener("click", () => openTourForm("Tạo Tour"));
   document.getElementById("btn-cancel-tour").addEventListener("click", closeTourForm);
   document.getElementById("tour-form").addEventListener("submit", saveTour);
 
@@ -240,7 +240,7 @@ function bindEvents() {
 
     if (button.dataset.action === "edit") {
       const tour = state.tours.find((item) => item.id === id);
-      openTourForm("Chinh sua Tour", tour);
+      openTourForm("Chỉnh sửa Tour", tour);
     }
 
     if (button.dataset.action === "delete") {
@@ -291,7 +291,7 @@ async function initTourPage() {
   state.imageMap = await getImagesByPoiIds(state.pois.map((item) => item.id));
 
   document.getElementById("poi-select").innerHTML = `
-    <option value="">-- Chon POI --</option>
+    <option value="">-- Chọn POI --</option>
     ${state.pois.map((poi) => `<option value="${poi.id}">${sanitizeText(poi.name)}</option>`).join("")}
   `;
 

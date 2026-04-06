@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quan ly POI</title>
+  <title>Danh sách POI</title>
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
@@ -15,27 +15,27 @@
       <div class="main-content">
         <section class="table-container">
           <div class="top-actions">
-            <h2>Danh sach POI</h2>
-            <button id="btn-open-add" class="btn add">Them POI</button>
+            <h2>Danh sách POI</h2>
+            <button id="btn-open-add" class="btn add">Thêm POI</button>
           </div>
 
           <div class="search-box">
-            <input id="search-poi" type="text" placeholder="Tim POI theo ten...">
+            <input id="search-poi" type="text" placeholder="Tìm POI...">
           </div>
 
           <div id="poi-form-panel" class="form-panel hidden">
             <h3 id="poi-form-title">Them POI</h3>
             <form id="poi-form">
-              <label for="poi-name">Ten POI</label>
+              <label for="poi-name">Tên quầy</label>
               <input id="poi-name" required>
 
-              <label for="poi-description">Mo ta</label>
+              <label for="poi-description">Mô tả</label>
               <textarea id="poi-description" rows="4" required></textarea>
 
-              <label>Anh hien tai</label>
+              <label>Ảnh hiện tại</label>
               <div id="current-image">-</div>
 
-              <label for="poi-image">Upload anh moi</label>
+              <label for="poi-image">Thay đổi ảnh</label>
               <input id="poi-image" type="file" accept="image/*">
 
               <label for="poi-lat">Latitude</label>
@@ -47,20 +47,20 @@
               <label for="poi-radius">Radius (m)</label>
               <input id="poi-radius" type="number" min="1" required>
 
-              <label for="poi-classification">Loai POI</label>
+              <label for="poi-classification">Loại POI</label>
               <select id="poi-classification">
-                <option value="major">Chinh</option>
-                <option value="minor">Phu</option>
+                <option value="major">Chính</option>
+                <option value="minor">Phụ</option>
               </select>
 
-              <label for="poi-minor-category">Danh muc phu</label>
+              <label for="poi-minor-category">Danh mục phụ</label>
               <select id="poi-minor-category"></select>
 
               <div id="add-map"></div>
 
               <div class="button-row">
-                <button type="submit">Luu</button>
-                <button id="btn-cancel-poi" type="button" class="btn reset">Huy</button>
+                <button type="submit">Lưu</button>
+                <button id="btn-cancel-poi" type="button" class="btn reset">Hủy</button>
               </div>
             </form>
           </div>
@@ -69,15 +69,15 @@
             <thead>
               <tr>
                 <th>ID</th>
-                <th>Ten</th>
-                <th>Anh</th>
-                <th>Mo ta</th>
-                <th>Vi do</th>
-                <th>Kinh do</th>
-                <th>Radius</th>
-                <th>Loai</th>
-                <th>Danh muc phu</th>
-                <th>Hanh dong</th>
+                <th>Tên quầy</th>
+                <th>Ảnh</th>
+                <th>Mô tả</th>
+                <th>Vĩ độ</th>
+                <th>Kinh độ</th>
+                <th>Bán kính</th>
+                <th>Loại</th>
+                <th>Danh mục phụ</th>
+                <th>Hành động</th>
               </tr>
             </thead>
             <tbody id="poi-table-body"></tbody>

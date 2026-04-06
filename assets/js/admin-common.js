@@ -7,26 +7,27 @@ export function renderSidebar(activePage) {
 
   const links = [
     { key: "dashboard", label: "Dashboard", href: "dashboard.html" },
-    { key: "poi", label: "Danh sach POI", href: "poi.html" },
+    { key: "poi", label: "Danh sách POI", href: "poi.html" },
     { key: "map", label: "Map POI", href: "map_poi.html" },
-    { key: "tour", label: "Quan ly Tours", href: "tour.html" }
+    { key: "tour", label: "Quản lý Tours", href: "tour.html" }
   ];
 
   nav.innerHTML = `
-    <a href="dashboard.html"><h2>FoodGuide Admin</h2></a>
+    <a href="poi.html"><h2>🍜 FoodGuide</h2></a>
     ${links
       .map(
         (item) =>
           `<a class="${activePage === item.key ? "active" : ""}" href="${item.href}">${item.label}</a>`
       )
       .join("")}
-    <hr>
-    <button id="btn-logout" class="sidebar-logout">Dang xuat</button>
+    <hr style="margin: 1rem 0; border-color: rgba(255,255,255,0.2);">
+    <a id="btn-logout" href="#">Đăng xuất</a>
   `;
 
   const logoutBtn = document.getElementById("btn-logout");
   if (logoutBtn) {
-    logoutBtn.addEventListener("click", async () => {
+    logoutBtn.addEventListener("click", async (event) => {
+      event.preventDefault();
       await supabase.auth.signOut();
       window.location.href = "login.html";
     });
