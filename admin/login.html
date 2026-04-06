@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dang nhap Admin</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="login-page">
+    <div class="login-box">
+      <h2>Dang nhap</h2>
+      <p class="login-help">Su dung tai khoan Supabase Auth de truy cap trang quan tri.</p>
+      <form id="login-form">
+        <label for="email">Email</label>
+        <input id="email" type="email" required placeholder="admin@example.com">
+
+        <label for="password">Mat khau</label>
+        <input id="password" type="password" required>
+
+        <p id="error-box" class="form-error"></p>
+        <button id="btn-login" type="submit">Dang nhap</button>
+      </form>
+    </div>
+  </div>
+  <script type="module" src="../assets/js/admin-login.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+
+    <main class="content">
+      <div class="main-content">
+        <section class="dashboard">
+          <article class="card blue">
+            <h3>Tong POI</h3>
+            <p id="stat-poi-total">0</p>
+          </article>
+          <article class="card green">
+            <h3>POI moi nhat</h3>
+            <p id="stat-poi-latest">N/A</p>
+          </article>
+          <article class="card orange">
+            <h3>Radius lon nhat</h3>
+            <p id="stat-radius-max">0 m</p>
+          </article>
+          <article class="card sky">
+            <h3>Tong Tour</h3>
+            <p id="stat-tour-total">0</p>
+          </article>
+          <article class="card leaf">
+            <h3>Tour moi nhat</h3>
+            <p id="stat-tour-latest">N/A</p>
+          </article>
+        </section>
+
+        <section class="table-container">
+          <h2>5 POI moi them</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ten quay</th>
+                <th>Mo ta</th>
+                <th>Anh</th>
+                <th>Vi do</th>
+                <th>Kinh do</th>
+                <th>Ban kinh</th>
+              </tr>
+            </thead>
+            <tbody id="recent-poi-body"></tbody>
+          </table>
+        </section>
+
+        <section class="table-container mt-24">
+          <h2>5 Tour moi them</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ten Tour</th>
+                <th>Mo ta</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tour-body"></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script type="module" src="../assets/js/admin-dashboard.js"></script>
+</body>
+</html>

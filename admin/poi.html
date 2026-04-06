@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quan ly POI</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+
+    <main class="content">
+      <div class="main-content">
+        <section class="table-container">
+          <div class="top-actions">
+            <h2>Danh sach POI</h2>
+            <button id="btn-open-add" class="btn add">Them POI</button>
+          </div>
+
+          <div class="search-box">
+            <input id="search-poi" type="text" placeholder="Tim POI theo ten...">
+          </div>
+
+          <div id="poi-form-panel" class="form-panel hidden">
+            <h3 id="poi-form-title">Them POI</h3>
+            <form id="poi-form">
+              <label for="poi-name">Ten POI</label>
+              <input id="poi-name" required>
+
+              <label for="poi-description">Mo ta</label>
+              <textarea id="poi-description" rows="4" required></textarea>
+
+              <label>Anh hien tai</label>
+              <div id="current-image">-</div>
+
+              <label for="poi-image">Upload anh moi</label>
+              <input id="poi-image" type="file" accept="image/*">
+
+              <label for="poi-lat">Latitude</label>
+              <input id="poi-lat" type="number" step="any" required>
+
+              <label for="poi-lng">Longitude</label>
+              <input id="poi-lng" type="number" step="any" required>
+
+              <label for="poi-radius">Radius (m)</label>
+              <input id="poi-radius" type="number" min="1" required>
+
+              <label for="poi-classification">Loai POI</label>
+              <select id="poi-classification">
+                <option value="major">Chinh</option>
+                <option value="minor">Phu</option>
+              </select>
+
+              <label for="poi-minor-category">Danh muc phu</label>
+              <select id="poi-minor-category"></select>
+
+              <div id="add-map"></div>
+
+              <div class="button-row">
+                <button type="submit">Luu</button>
+                <button id="btn-cancel-poi" type="button" class="btn reset">Huy</button>
+              </div>
+            </form>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ten</th>
+                <th>Anh</th>
+                <th>Mo ta</th>
+                <th>Vi do</th>
+                <th>Kinh do</th>
+                <th>Radius</th>
+                <th>Loai</th>
+                <th>Danh muc phu</th>
+                <th>Hanh dong</th>
+              </tr>
+            </thead>
+            <tbody id="poi-table-body"></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="../assets/js/admin-poi.js"></script>
+</body>
+</html>

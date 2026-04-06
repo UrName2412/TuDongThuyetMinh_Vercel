@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quan ly Tour</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/tour.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+
+    <main class="content">
+      <div class="main-content">
+        <section class="table-container">
+          <div class="top-actions">
+            <h2>Quan ly Tour</h2>
+            <button id="btn-open-add-tour" class="btn add">Tao Tour moi</button>
+          </div>
+
+          <div id="tour-form-panel" class="form-panel hidden">
+            <h3 id="tour-form-title">Tao Tour</h3>
+            <div class="tour-builder">
+              <div class="tour-panel">
+                <form id="tour-form">
+                  <label for="tour-name">Ten Tour</label>
+                  <input id="tour-name" required>
+
+                  <label for="tour-description">Mo ta</label>
+                  <textarea id="tour-description" rows="4"></textarea>
+
+                  <label for="poi-select">Chon POI</label>
+                  <div class="controls">
+                    <select id="poi-select"></select>
+                    <button id="add-poi-btn" type="button">Them vao lo trinh</button>
+                  </div>
+
+                  <div class="hint">Can toi thieu 2 POI trong 1 tour.</div>
+                  <ul id="tour-poi-list"></ul>
+
+                  <div class="button-row">
+                    <button type="submit">Luu Tour</button>
+                    <button id="btn-cancel-tour" type="button" class="btn reset">Huy</button>
+                  </div>
+                </form>
+              </div>
+
+              <div class="tour-map">
+                <h3>Ban do POI</h3>
+                <div id="tour-map"></div>
+              </div>
+            </div>
+          </div>
+
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Ten Tour</th>
+                <th>Mo ta</th>
+                <th>Lo trinh</th>
+                <th>Hanh dong</th>
+              </tr>
+            </thead>
+            <tbody id="tour-table-body"></tbody>
+          </table>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="../assets/js/admin-tour.js"></script>
+</body>
+</html>

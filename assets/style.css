@@ -42,6 +42,18 @@ body {
     background: #34495e;
 }
 
+.sidebar a.active {
+    background: #1abc9c;
+    color: #0b1f1a;
+    font-weight: 700;
+}
+
+.sidebar button.sidebar-logout {
+    width: 100%;
+    margin-top: 8px;
+    background: #e74c3c;
+}
+
 
 /* CONTENT */
 
@@ -66,6 +78,10 @@ body {
 
 .main-content {
     padding: 30px;
+}
+
+.mt-24 {
+    margin-top: 24px;
 }
 
 .main-center {
@@ -243,8 +259,29 @@ tr:hover {
     overflow: hidden;
 }
 
+.button-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.button-row .btn.reset {
+    margin-top: 20px;
+}
+
+.form-error {
+    min-height: 20px;
+    margin-top: 10px;
+    color: #e11d48;
+    font-size: 14px;
+}
+
 .btn {
     display: inline-block;
+    width: auto;
+    margin-top: 0;
+    border: none;
+    cursor: pointer;
     padding: 6px 12px;
     border-radius: 5px;
     color: white;
@@ -338,6 +375,11 @@ tr:hover {
 
 .toast.update {
     background: yellow;
+}
+
+.toast.info {
+    background: #0ea5e9;
+    color: #fff;
 }
 
 
@@ -452,4 +494,22 @@ tr:hover {
     margin-top: 0;
     text-align: center;
     margin-bottom: 20px;
+}
+
+.login-help {
+    margin-top: -8px;
+    margin-bottom: 14px;
+    color: #475569;
+}
+
+.map-large {
+    height: 600px;
+    margin-top: 14px;
+    border-radius: 10px;
+}
+
+.public-map-page {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 16px;
 }
