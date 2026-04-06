@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh sách POI</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+
+    <div class="content">
+      <div class="main-content">
+        <div class="table-container">
+          <div class="top-actions">
+            <h2>Danh sách POI</h2>
+            <a class="btn add" href="add_poi.html">Thêm POI</a>
+          </div>
+
+          <div class="search-box">
+            <input id="search-poi" type="text" placeholder="Tìm POI...">
+          </div>
+
+          <div id="empty-state" style="display:none;">Chưa có POI nào. Hãy thêm POI.</div>
+
+          <table id="poi-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên quầy</th>
+                <th>Ảnh</th>
+                <th>Mô tả</th>
+                <th>Vĩ độ</th>
+                <th>Kinh độ</th>
+                <th>Bán kính</th>
+                <th>Loại</th>
+                <th>Danh mục phụ</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="poi-table-body"></tbody>
+          </table>
+
+          <div class="pagination" id="pagination"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../assets/js/admin-list-poi.js"></script>
+</body>
+</html>

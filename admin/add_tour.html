@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tạo Tour</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="../assets/tour.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+
+    <div class="content">
+      <div class="main-content">
+        <div class="tour-builder">
+          <div class="tour-panel">
+            <h2>Thiết kế Tour</h2>
+            <p class="subtext">Thiết lập lộ trình tham quan</p>
+
+            <form id="tour-form">
+              <label for="tour-name">Tên tour</label>
+              <input id="tour-name" required>
+
+              <label for="tour-description">Mô tả</label>
+              <textarea id="tour-description"></textarea>
+
+              <label for="poi-select">Chọn POI</label>
+              <div class="controls">
+                <select id="poi-select" multiple size="5"></select>
+                <button id="add-poi-btn" type="button">Thêm POI đã chọn</button>
+              </div>
+
+              <div class="hint">Thứ tự lộ trình: chọn nhiều điểm và thêm vào danh sách.</div>
+              <div class="hint">Chọn ít nhất 2 POI để lưu tour.</div>
+              <div class="hint">Bấm marker trên bản đồ để thêm POI vào tour.</div>
+              <ul id="tour-poi-list"></ul>
+
+              <button type="submit">Lưu Tour</button>
+            </form>
+          </div>
+
+          <div class="tour-map">
+            <div id="tour-map"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="../assets/js/admin-add-tour.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sửa POI</title>
+  <link rel="stylesheet" href="../assets/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+    <div class="content">
+      <div class="main-content main-center">
+        <div class="container">
+          <h2>Sửa POI</h2>
+          <form id="poi-form">
+            <label for="poi-name">Tên quầy</label>
+            <input id="poi-name" required>
+
+            <label for="poi-description">Mô tả</label>
+            <textarea id="poi-description" rows="4" required></textarea>
+
+            <label>Ảnh hiện tại</label>
+            <div id="current-image">-</div>
+
+            <label for="poi-image">Thay đổi ảnh</label>
+            <input id="poi-image" type="file" accept="image/*">
+
+            <label for="poi-lat">Vĩ độ</label>
+            <input id="poi-lat" readonly required>
+
+            <label for="poi-lng">Kinh độ</label>
+            <input id="poi-lng" readonly required>
+
+            <label for="poi-classification">Loại POI</label>
+            <select id="poi-classification">
+              <option value="major">Chính</option>
+              <option value="minor">Phụ</option>
+            </select>
+
+            <label for="poi-minor-category">Danh mục phụ</label>
+            <select id="poi-minor-category">
+              <option value="">-- Chọn --</option>
+              <option value="WC">WC</option>
+              <option value="Ban ve">Bán vé</option>
+              <option value="Gui xe">Gửi xe</option>
+              <option value="Ben thuyen">Bến thuyền</option>
+            </select>
+
+            <label for="poi-radius">Radius (m)</label>
+            <input id="poi-radius" type="number" min="1" required>
+
+            <div id="map"></div>
+            <button type="submit">Cập nhật</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="../assets/js/admin-edit-poi.js"></script>
+</body>
+</html>

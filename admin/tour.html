@@ -2,76 +2,8 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý Tours</title>
-  <link rel="stylesheet" href="../assets/style.css">
-  <link rel="stylesheet" href="../assets/tour.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <meta http-equiv="refresh" content="0; url=manage_tour.html">
+  <title>Redirect</title>
 </head>
-<body>
-  <div class="admin">
-    <aside id="admin-sidebar" class="sidebar"></aside>
-
-    <main class="content">
-      <div class="main-content">
-        <section class="table-container">
-          <div class="top-actions">
-            <h2>Quản lý Tour</h2>
-            <button id="btn-open-add-tour" class="btn add">Tạo Tour mới</button>
-          </div>
-
-          <div id="tour-form-panel" class="form-panel hidden">
-            <h3 id="tour-form-title">Tao Tour</h3>
-            <div class="tour-builder">
-              <div class="tour-panel">
-                <form id="tour-form">
-                  <label for="tour-name">Tên Tour</label>
-                  <input id="tour-name" required>
-
-                  <label for="tour-description">Mô tả</label>
-                  <textarea id="tour-description" rows="4"></textarea>
-
-                  <label for="poi-select">Chọn POI</label>
-                  <div class="controls">
-                    <select id="poi-select"></select>
-                    <button id="add-poi-btn" type="button">Thêm vào lộ trình</button>
-                  </div>
-
-                  <div class="hint">Cần tối thiểu 2 POI trong 1 tour.</div>
-                  <ul id="tour-poi-list"></ul>
-
-                  <div class="button-row">
-                    <button type="submit">Lưu Tour</button>
-                    <button id="btn-cancel-tour" type="button" class="btn reset">Hủy</button>
-                  </div>
-                </form>
-              </div>
-
-              <div class="tour-map">
-                <h3>Bản đồ POI</h3>
-                <div id="tour-map"></div>
-              </div>
-            </div>
-          </div>
-
-          <table>
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>Tên Tour</th>
-                <th>Mô tả</th>
-                <th>Lộ trình</th>
-                <th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody id="tour-table-body"></tbody>
-          </table>
-        </section>
-      </div>
-    </main>
-  </div>
-
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script type="module" src="../assets/js/admin-tour.js"></script>
-</body>
+<body></body>
 </html>

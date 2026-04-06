@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản lý Tours</title>
+  <link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+  <div class="admin">
+    <aside id="admin-sidebar" class="sidebar"></aside>
+
+    <div class="content">
+      <div class="main-content">
+        <div class="table-container">
+          <h2>Quản lý Tour</h2>
+          <a class="btn add" href="add_tour.html">Tạo Tour mới</a>
+
+          <div id="empty-state" style="display:none;">Chưa có tour nào. Hãy tạo tour để bắt đầu.</div>
+          <table id="tour-table" style="display:none;">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên Tour</th>
+                <th>Mô tả</th>
+                <th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="tour-table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../assets/js/admin-manage-tour.js"></script>
+</body>
+</html>
