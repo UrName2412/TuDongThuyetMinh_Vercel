@@ -21,7 +21,6 @@ export function renderPoiRows(pois, imageMap) {
         <td>${poi.latitude ?? ""}</td>
         <td>${poi.longitude ?? ""}</td>
         <td>${poi.radius ?? 0} m</td>
-        <td>${sanitizeText(poi.minor_category || "")}</td>
         <td>
           <a class="btn edit" href="edit_poi.html?id=${poi.id}">Sửa</a>
           <button class="btn delete" data-delete-id="${poi.id}">Xóa</button>
@@ -190,8 +189,7 @@ export async function createPoiFromForm() {
     description: document.getElementById("poi-description").value.trim(),
     latitude: Number(document.getElementById("poi-lat").value),
     longitude: Number(document.getElementById("poi-lng").value),
-    radius: Number(document.getElementById("poi-radius").value),
-    minor_category: document.getElementById("poi-minor-category").value || null
+    radius: Number(document.getElementById("poi-radius").value)
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
@@ -236,8 +234,7 @@ export async function updatePoiFromForm(poiId, existingImageRow) {
     description: document.getElementById("poi-description").value.trim(),
     latitude: Number(document.getElementById("poi-lat").value),
     longitude: Number(document.getElementById("poi-lng").value),
-    radius: Number(document.getElementById("poi-radius").value),
-    minor_category: document.getElementById("poi-minor-category").value || null
+    radius: Number(document.getElementById("poi-radius").value)
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
