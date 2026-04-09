@@ -1,6 +1,6 @@
 import { supabase } from "./supabase-client.js";
 import { POI_IMAGE_BUCKET, TABLES, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "./supabase-config.js";
-import { sanitizeText, showToast } from "./admin-common.js";
+import { sanitizeText, showToast, safeGetValue } from "./admin-common.js";
 import { getImagesByPoiIds, getPois } from "./data-service.js";
 
 export async function loadPoiDataset() {
