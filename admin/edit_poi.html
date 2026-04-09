@@ -27,13 +27,16 @@
             <label for="poi-image">Thay đổi ảnh</label>
             <input id="poi-image" type="file" accept="image/*">
 
-            <label for="poi-lat">Vĩ độ</label>
+<label for="poi-lat">Latitude</label>
             <input id="poi-lat" readonly required>
+
+            <label for="poi-lng">Longitude</label>
+            <input id="poi-lng" readonly required>
+
+            <div id="map"></div>
 
             <label for="poi-radius">Radius (m)</label>
             <input id="poi-radius" type="number" min="1" required>
-
-            <div id="map"></div>
             <button type="submit">Cập nhật</button>
           </form>
         </div>

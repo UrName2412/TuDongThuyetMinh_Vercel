@@ -30,6 +30,15 @@ async function init() {
     ? `<img class="poi-thumbnail" src="${sanitizeText(imageRow.image_url)}" alt="Ảnh POI">`
     : "Chưa có ảnh.";
 
+  // Đảm bảo DOM ready cho map
+  await new Promise(resolve => {
+    if (document.getElementById('map')) {
+      resolve();
+    } else {
+      window.addEventListener('DOMContentLoaded', resolve);
+    }
+  });
+
   initPickerMap("map", "poi-lat", "poi-lng", poi.latitude, poi.longitude);
 
   document.getElementById("poi-form").addEventListener("submit", async (event) => {
