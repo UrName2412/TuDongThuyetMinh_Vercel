@@ -185,11 +185,11 @@ export async function createPoiFromForm() {
   }
 
   const payload = {
-    name: document.getElementById("poi-name").value.trim(),
-    description: document.getElementById("poi-description").value.trim(),
-    latitude: Number(document.getElementById("poi-lat").value),
-    longitude: Number(document.getElementById("poi-lng").value),
-    radius: Number(document.getElementById("poi-radius").value)
+    name: safeGetValue("poi-name"),
+    description: safeGetValue("poi-description"),
+    latitude: Number(safeGetValue("poi-lat")),
+    longitude: Number(safeGetValue("poi-lng")),
+    radius: Number(safeGetValue("poi-radius"))
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
@@ -230,11 +230,11 @@ export async function createPoiFromForm() {
 
 export async function updatePoiFromForm(poiId, existingImageRow) {
   const payload = {
-    name: document.getElementById("poi-name").value.trim(),
-    description: document.getElementById("poi-description").value.trim(),
-    latitude: Number(document.getElementById("poi-lat").value),
-    longitude: Number(document.getElementById("poi-lng").value),
-    radius: Number(document.getElementById("poi-radius").value)
+    name: safeGetValue("poi-name"),
+    description: safeGetValue("poi-description"),
+    latitude: Number(safeGetValue("poi-lat")),
+    longitude: Number(safeGetValue("poi-lng")),
+    radius: Number(safeGetValue("poi-radius"))
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {

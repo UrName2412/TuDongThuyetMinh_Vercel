@@ -30,8 +30,8 @@ async function ensureSignedOutRender() {
 
 form?.addEventListener("submit", async (event) => {
   event.preventDefault();
-  const email = document.getElementById("email").value.trim();
-  const password = document.getElementById("password").value;
+  const email = safeGetValue("email");
+  const password = safeGetValue("password");
 
   submitBtn.disabled = true;
 

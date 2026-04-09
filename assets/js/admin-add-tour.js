@@ -42,7 +42,7 @@ async function init() {
     event.preventDefault();
 
     try {
-      await saveTour(null, document.getElementById("tour-name").value.trim(), document.getElementById("tour-description").value.trim(), selectedIds);
+      await saveTour(null, safeGetValue("tour-name"), safeGetValue("tour-description"), selectedIds);
       showToast("Tour đã được tạo thành công.", "add");
       setTimeout(() => {
         window.location.href = "manage_tour.html?added=1";

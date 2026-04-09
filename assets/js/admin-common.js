@@ -35,7 +35,6 @@ export function renderSidebar(activePage) {
 }
 
 export function showToast(message, type = "info") {
-  // Map legacy types to new semantic classes
   const typeMap = {
     add: "success",
     delete: "error",
@@ -86,14 +85,24 @@ export function formatNumber(value) {
 }
 
 export function sanitizeText(value) {
-  return String(value ?? "").replace(/[&<>\"']/g, (ch) => {
+  return String(value ?? "").replace(/[&<>\\"']/g, (ch) => {
     const map = {
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '\"': "&quot;",
-      "'": "&#39;"
+      '&': '&amp;',
+      '<': '<',
+      '>': '>',
+      '"': '"',
+      "'": '&#39;'
     };
     return map[ch];
   });
+}
+
+export function safeGetValue(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+export function safeSetValue(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.value = value || '';
 }

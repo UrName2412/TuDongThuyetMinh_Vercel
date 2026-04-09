@@ -25,8 +25,8 @@ async function init() {
     .sort((a, b) => (a.order || 0) - (b.order || 0))
     .map((row) => Number(row.poi_id));
 
-  document.getElementById("tour-name").value = tour.name || "";
-  document.getElementById("tour-description").value = tour.description || "";
+  safeSetValue("tour-name", tour.name);
+  safeSetValue("tour-description", tour.description);
 
   const list = document.getElementById("tour-poi-list");
   const editor = buildRouteEditor(list, selectedIds, poiMap, imageMap);
@@ -60,7 +60,7 @@ async function init() {
     event.preventDefault();
 
     try {
-      await saveTour(tourId, document.getElementById("tour-name").value.trim(), document.getElementById("tour-description").value.trim(), selectedIds);
+      await saveTour(tourId, safeGetValue("tour-name"), safeGetValue("tour-description"), selectedIds);
       showToast("Tour đã được cập nhật.", "add");
       setTimeout(() => {
         window.location.href = "manage_tour.html?updated=1";

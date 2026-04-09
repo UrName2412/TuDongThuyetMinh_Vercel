@@ -113,8 +113,8 @@ function openTourForm(title, tour = null) {
   document.getElementById("tour-form-title").textContent = title;
 
   state.editingTourId = tour?.id || null;
-  document.getElementById("tour-name").value = tour?.name || "";
-  document.getElementById("tour-description").value = tour?.description || "";
+  safeSetValue("tour-name", tour?.name);
+  safeSetValue("tour-description", tour?.description);
 
   if (!tour) {
     state.selectedPoiIds = [];
@@ -139,8 +139,8 @@ function closeTourForm() {
 async function saveTour(event) {
   event.preventDefault();
 
-  const name = document.getElementById("tour-name").value.trim();
-  const description = document.getElementById("tour-description").value.trim();
+  const name = safeGetValue("tour-name");
+  const description = safeGetValue("tour-description");
 
   if (!name || state.selectedPoiIds.length < 2) {
     showToast("Tên tour và ít nhất 2 POI là bắt buộc.", "delete");
@@ -278,7 +278,7 @@ function bindEvents() {
   });
 
   document.getElementById("add-poi-btn").addEventListener("click", () => {
-    const value = Number(document.getElementById("poi-select").value);
+    const value = Number(safeGetValue("poi-select"));
     addPoiToTour(value);
   });
 }

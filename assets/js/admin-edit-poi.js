@@ -20,11 +20,11 @@ async function init() {
     return;
   }
 
-  document.getElementById("poi-name").value = poi.name || "";
-  document.getElementById("poi-description").value = poi.description || "";
-  document.getElementById("poi-lat").value = poi.latitude || "";
-  document.getElementById("poi-lng").value = poi.longitude || "";
-  document.getElementById("poi-radius").value = poi.radius || "";
+  safeSetValue("poi-name", poi.name);
+  safeSetValue("poi-description", poi.description);
+  safeSetValue("poi-lat", poi.latitude);
+  safeSetValue("poi-lng", poi.longitude);
+  safeSetValue("poi-radius", poi.radius);
 
   document.getElementById("current-image").innerHTML = imageRow?.image_url
     ? `<img class="poi-thumbnail" src="${sanitizeText(imageRow.image_url)}" alt="Ảnh POI">`

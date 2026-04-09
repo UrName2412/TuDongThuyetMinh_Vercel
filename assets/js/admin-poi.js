@@ -58,7 +58,7 @@ async function removeImageObjectIfAny(imageUrl) {
 }
 
 function renderTable() {
-  const search = document.getElementById("search-poi").value.trim().toLowerCase();
+  const search = safeGetValue("search-poi").toLowerCase();
   const body = document.getElementById("poi-table-body");
   const rows = state.pois.filter((poi) => poi.name?.toLowerCase().includes(search));
 
@@ -94,13 +94,14 @@ function openForm(title, poi = null) {
 
   state.editingPoiId = poi?.id || null;
 
-  document.getElementById("poi-name").value = poi?.name || "";
-  document.getElementById("poi-description").value = poi?.description || "";
-  document.getElementById("poi-lat").value = poi?.latitude || "";
-  document.getElementById("poi-lng").value = poi?.longitude || "";
-  document.getElementById("poi-radius").value = poi?.radius || "";
-  document.getElementById("poi-classification").value = poi?.classification || "major";
-  document.getElementById("poi-minor-category").innerHTML = getMinorCategoryOptions(poi?.minor_category || "");
+  safeSetValue("poi-name", poi?.name);
+  safeSetValue("poi-description", poi?.description);
+  safeSetValue("poi-lat", poi?.latitude);
+  safeSetValue("poi-lng", poi?.longitude);
+  safeSetValue("poi-radius", poi?.radius);
+  safeSetValue("poi-classification", poi?.classification || "major");
+  const minorEl = document.getElementById("poi-minor-category");
+  if (minorEl) minorEl.innerHTML = getMinorCategoryOptions(poi?.minor_category || ""); 
 
   const currentImage = document.getElementById("current-image");
   const imageUrl = state.imageMap.get(poi?.id)?.image_url || "";
@@ -117,18 +118,18 @@ function openForm(title, poi = null) {
       attribution: "&copy; OpenStreetMap contributors"
     }).addTo(state.map);
 
-    state.map.on("click", (event) => {
-      const pickedLat = event.latlng.lat;
-      const pickedLng = event.latlng.lng;
-      document.getElementById("poi-lat").value = pickedLat;
-      document.getElementById("poi-lng").value = pickedLng;
+  map.on("click", (event) => {
+    const pickedLat = event.latlng.lat;
+    const pickedLng = event.latlng.lng;
+    safeSetValue("poi-lat", pickedLat);
+    safeSetValue("poi-lng", pickedLng);
 
-      if (state.marker) {
-        state.marker.setLatLng([pickedLat, pickedLng]);
-      } else {
-        state.marker = L.marker([pickedLat, pickedLng]).addTo(state.map);
-      }
-    });
+    if (state.marker) {
+      state.marker.setLatLng([pickedLat, pickedLng]);
+    } else {
+      state.marker = L.marker([pickedLat, pickedLng]).addTo(state.map);
+    }
+  });
   } else {
     state.map.setView([lat, lng], DEFAULT_MAP_ZOOM + 1);
   }
