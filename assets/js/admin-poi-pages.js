@@ -41,12 +41,24 @@ export async function ensureCanDeletePoi(id) {
 function getStoragePathFromPublicUrl(url) {
   if (!url) return null;
   try {
-    const parsed = new URL(url);
-    const marker = `/storage/v1/object/public/${POI_IMAGE_BUCKET}/`;
-    const index = parsed.pathname.indexOf(marker);
-    if (index === -1) return null;
-    return decodeURIComponent(parsed.pathname.slice(index + marker.length));
-  } catch {
+    const urlObject = new URL(url);
+    // The path in Supabase Storage is the part of the pathname after the bucket name.
+    // e.g., /storage/v1/object/public/images/poi/123/thumb.jpg -> poi/123/thumb.jpg
+    const pathSegments = urlObject.pathname.split('/');
+    const bucketNameIndex = pathSegments.indexOf(POI_IMAGE_BUCKET);
+    
+    if (bucketNameIndex === -1 || bucketNameIndex + 1 >= pathSegments.length) {
+      console.warn(`[DELETE] Could not find bucket '${POI_IMAGE_BUCKET}' in URL path: ${urlObject.pathname}`);
+      return null;
+    }
+    
+    // Join the parts of the path *after* the bucket name
+    const storagePath = pathSegments.slice(bucketNameIndex + 1).join('/');
+    const decodedPath = decodeURIComponent(storagePath);
+    console.log(`[DELETE] Extracted storage path: ${decodedPath}`);
+    return decodedPath;
+  } catch (e) {
+    console.error(`[DELETE] Invalid URL provided to getStoragePathFromPublicUrl: ${url}`, e);
     return null;
   }
 }
