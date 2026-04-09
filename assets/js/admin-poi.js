@@ -172,9 +172,7 @@ async function savePoi(event) {
     description: document.getElementById("poi-description").value.trim(),
     latitude: Number(document.getElementById("poi-lat").value),
     longitude: Number(document.getElementById("poi-lng").value),
-    radius: Number(document.getElementById("poi-radius").value),
-    classification: document.getElementById("poi-classification").value,
-    minor_category: document.getElementById("poi-minor-category").value || null
+    radius: Number(document.getElementById("poi-radius").value)
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
