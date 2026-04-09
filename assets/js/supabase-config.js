@@ -16,7 +16,7 @@ export const TABLES = {
 };
 
 // Storage bucket used for POI images.
-export const POI_IMAGE_BUCKET = "Images";
+export const POI_IMAGE_BUCKET = "poi-images";
 
 // Default map center (HCMC)
 export const DEFAULT_MAP_CENTER = [10.762622, 106.660172];
