@@ -1,4 +1,4 @@
-import { supabase } from "./supabase-client.js";
+import { supabase, safeGetValue } from "./admin-common.js";
 
 const form = document.getElementById("login-form");
 const submitBtn = document.getElementById("btn-login");
