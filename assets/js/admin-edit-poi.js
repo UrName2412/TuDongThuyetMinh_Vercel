@@ -1,4 +1,4 @@
-import { requireAdmin, renderSidebar, showToast, sanitizeText } from "./admin-common.js";
+import { requireAdmin, renderSidebar, showToast, sanitizeText, safeSetValue } from "./admin-common.js";
 import { initPickerMap, loadPoiDataset, updatePoiFromForm } from "./admin-poi-pages.js";
 
 async function init() {
