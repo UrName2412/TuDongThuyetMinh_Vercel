@@ -4,14 +4,14 @@ const form = document.getElementById("login-form");
 const submitBtn = document.getElementById("btn-login");
 
 function showLoginError(message) {
-  const existing = document.getElementById("toast");
+  const existing = document.getElementById("toast-container");
   if (existing) {
     existing.remove();
   }
 
   const toast = document.createElement("div");
-  toast.id = "toast";
-  toast.className = "toast delete";
+  toast.id = "toast-container";
+  toast.className = "toast toast-error";
   toast.textContent = message;
   document.body.appendChild(toast);
 

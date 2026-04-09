@@ -21,7 +21,7 @@
 
 .tour-panel p.subtext {
     margin: 0 0 24px;
-    color: #6b7280;
+    color: #4b5563; /* Darker Gray for better contrast */
     font-size: 14px;
 }
 
@@ -85,7 +85,7 @@
 }
 
 .tour-panel .controls button:hover {
-    background: #6d28d9;
+    background: #5b21b6; /* Even Darker Purple */
 }
 
 .tour-panel .hint {
@@ -133,13 +133,17 @@
 .tour-panel button[type='submit'] {
     width: 100%;
     margin-top: 18px;
-    background: #7c3aed;
+    background: #6d28d9; /* Darker Purple */
     color: white;
     border: none;
     border-radius: 16px;
     padding: 14px;
     font-size: 16px;
     cursor: pointer;
+}
+
+.tour-panel button[type='submit']:hover {
+    background: #5b21b6;
 }
 
 .tour-map {
