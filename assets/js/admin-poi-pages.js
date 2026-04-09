@@ -88,20 +88,47 @@ export function initPickerMap(mapId, latInputId, lngInputId, initialLat = null, 
 
 async function uploadImageIfAny(file, poiId) {
   if (!file) return null;
-  const ext = file.name.split(".").pop() || "jpg";
+  
+  // Validate file
+  if (file.size > 5 * 1024 * 1024) {
+    throw new Error("File ảnh quá lớn (tối đa 5MB)");
+  }
+  if (!file.type.startsWith('image/')) {
+    throw new Error("Chỉ chấp nhận file ảnh");
+  }
+  
+  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
   const path = `poi/${poiId}/${Date.now()}.${ext}`;
 
-  const { error: uploadError } = await supabase.storage.from(POI_IMAGE_BUCKET).upload(path, file, {
-    upsert: true,
-    contentType: file.type || "image/jpeg"
-  });
-  if (uploadError) throw uploadError;
+  console.log(`[UPLOAD] Starting upload to ${POI_IMAGE_BUCKET}/${path}, size: ${file.size}, type: ${file.type}`);
+  
+  const { error: uploadError } = await supabase.storage
+    .from(POI_IMAGE_BUCKET)
+    .upload(path, file, {
+      upsert: true,
+      contentType: file.type || "image/jpeg"
+    });
+    
+  if (uploadError) {
+    console.error("[UPLOAD ERROR]", uploadError);
+    throw new Error(`Upload ảnh thất bại: ${uploadError.message}`);
+  }
 
   const { data } = supabase.storage.from(POI_IMAGE_BUCKET).getPublicUrl(path);
+  console.log("[UPLOAD SUCCESS]", data.publicUrl);
   return data.publicUrl;
 }
 
 export async function createPoiFromForm() {
+  console.log("[CREATE POI] Starting...");
+  
+  // Refresh session
+  const { data: { session } } = await supabase.auth.getSession();
+  console.log("[SESSION]", session ? "Active" : "No session!");
+  if (!session) {
+    throw new Error("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại!");
+  }
+
   const payload = {
     name: document.getElementById("poi-name").value.trim(),
     description: document.getElementById("poi-description").value.trim(),
@@ -116,16 +143,35 @@ export async function createPoiFromForm() {
     throw new Error("Vui lòng nhập đủ thông tin và chọn vị trí trên bản đồ!");
   }
 
-  const { data, error } = await supabase.from(TABLES.POI).insert(payload).select("id").single();
-  if (error) throw error;
+  console.log("[POI INSERT]", payload);
+  const { data, error: poiError } = await supabase
+    .from(TABLES.POI)
+    .insert(payload)
+    .select("id")
+    .single();
+    
+  if (poiError) {
+    console.error("[POI INSERT ERROR]", poiError);
+    throw new Error(`Tạo POI thất bại: ${poiError.message}`);
+  }
+  console.log("[POI CREATED]", data.id);
 
   const file = document.getElementById("poi-image").files[0];
   if (file) {
     const imageUrl = await uploadImageIfAny(file, data.id);
-    const { error: imageError } = await supabase.from(TABLES.IMAGE).insert({ poi_id: data.id, image_url: imageUrl });
-    if (imageError) throw imageError;
+    console.log("[IMAGE INSERT]", { poi_id: data.id, image_url: imageUrl });
+    const { error: imageError } = await supabase
+      .from(TABLES.IMAGE)
+      .insert({ poi_id: data.id, image_url: imageUrl });
+      
+    if (imageError) {
+      console.error("[IMAGE INSERT ERROR]", imageError);
+      throw new Error(`Lưu ảnh thất bại: ${imageError.message}`);
+    }
+    console.log("[IMAGE SAVED SUCCESS]");
   }
 
+  console.log("[CREATE POI] COMPLETED");
   return data.id;
 }
 
