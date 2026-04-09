@@ -21,7 +21,6 @@ export function renderPoiRows(pois, imageMap) {
         <td>${poi.latitude ?? ""}</td>
         <td>${poi.longitude ?? ""}</td>
         <td>${poi.radius ?? 0} m</td>
-        <td>${poi.classification === "minor" ? "Phụ" : "Chính"}</td>
         <td>${sanitizeText(poi.minor_category || "")}</td>
         <td>
           <a class="btn edit" href="edit_poi.html?id=${poi.id}">Sửa</a>
@@ -192,7 +191,6 @@ export async function createPoiFromForm() {
     latitude: Number(document.getElementById("poi-lat").value),
     longitude: Number(document.getElementById("poi-lng").value),
     radius: Number(document.getElementById("poi-radius").value),
-    classification: document.getElementById("poi-classification").value,
     minor_category: document.getElementById("poi-minor-category").value || null
   };
 
@@ -239,7 +237,6 @@ export async function updatePoiFromForm(poiId, existingImageRow) {
     latitude: Number(document.getElementById("poi-lat").value),
     longitude: Number(document.getElementById("poi-lng").value),
     radius: Number(document.getElementById("poi-radius").value),
-    classification: document.getElementById("poi-classification").value,
     minor_category: document.getElementById("poi-minor-category").value || null
   };
 

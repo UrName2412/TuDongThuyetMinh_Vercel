@@ -25,7 +25,6 @@ async function init() {
   document.getElementById("poi-lat").value = poi.latitude || "";
   document.getElementById("poi-lng").value = poi.longitude || "";
   document.getElementById("poi-radius").value = poi.radius || "";
-  document.getElementById("poi-classification").value = poi.classification || "major";
   document.getElementById("poi-minor-category").value = poi.minor_category || "";
 
   document.getElementById("current-image").innerHTML = imageRow?.image_url
