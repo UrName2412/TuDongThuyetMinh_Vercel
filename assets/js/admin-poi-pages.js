@@ -38,21 +38,66 @@ export async function ensureCanDeletePoi(id) {
   return !(data && data.length > 0);
 }
 
+function getStoragePathFromPublicUrl(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    const marker = `/storage/v1/object/public/${POI_IMAGE_BUCKET}/`;
+    const index = parsed.pathname.indexOf(marker);
+    if (index === -1) return null;
+    return decodeURIComponent(parsed.pathname.slice(index + marker.length));
+  } catch {
+    return null;
+  }
+}
+
+async function removeImageObjectIfAny(imageUrl) {
+  const storagePath = getStoragePathFromPublicUrl(imageUrl);
+  if (!storagePath) return;
+
+  const { error } = await supabase.storage.from(POI_IMAGE_BUCKET).remove([storagePath]);
+  if (error) {
+    throw new Error(`Không thể xóa file ảnh trên Storage: ${error.message}`);
+  }
+}
+
 export async function deletePoi(id, imageMap) {
+  console.log(`[DELETE POI] Starting deletion for POI ID: ${id}`);
   const canDelete = await ensureCanDeletePoi(id);
   if (!canDelete) {
-    showToast("Không thể xóa POI vì nó đang được sử dụng trong tour", "delete");
+    const message = "Không thể xóa POI vì nó đang được sử dụng trong một hoặc nhiều tour.";
+    console.warn(`[DELETE POI] Aborted: ${message}`);
+    showToast(message, "delete");
     return false;
   }
 
   const imageRow = imageMap.get(id);
-  if (imageRow?.id) {
-    const { error: imgError } = await supabase.from(TABLES.IMAGE).delete().eq("id", imageRow.id);
-    if (imgError) throw imgError;
+  if (imageRow?.image_url) {
+    console.log(`[DELETE POI] Found associated image: ${imageRow.image_url}`);
+    try {
+      await removeImageObjectIfAny(imageRow.image_url);
+      console.log(`[DELETE POI] Successfully removed image from Storage.`);
+    } catch (storageError) {
+      console.error("[DELETE POI] Error removing image from storage:", storageError);
+      // Decide if you want to stop the process or just log the error and continue
+      // For now, we'll throw to make it visible that something went wrong.
+      throw storageError;
+    }
+  } else {
+    console.log(`[DELETE POI] No associated image found for POI ID: ${id}`);
   }
 
+  // Now, delete the POI record itself.
+  // The 'image' table has a foreign key with cascade delete, 
+  // so the image record will be deleted automatically when the POI is deleted.
+  console.log(`[DELETE POI] Deleting POI record from table '${TABLES.POI}'...`);
   const { error } = await supabase.from(TABLES.POI).delete().eq("id", id);
-  if (error) throw error;
+  if (error) {
+    console.error("[DELETE POI] Error deleting POI record:", error);
+    throw error;
+  }
+
+  console.log(`[DELETE POI] Successfully deleted POI ID: ${id}`);
   return true;
 }
 

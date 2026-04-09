@@ -22,6 +22,29 @@ function toPublicImage(url) {
   return url || "";
 }
 
+function getStoragePathFromPublicUrl(url) {
+  if (!url) return null;
+  try {
+    const parsed = new URL(url);
+    const marker = `/storage/v1/object/public/${POI_IMAGE_BUCKET}/`;
+    const index = parsed.pathname.indexOf(marker);
+    if (index === -1) return null;
+    return decodeURIComponent(parsed.pathname.slice(index + marker.length));
+  } catch {
+    return null;
+  }
+}
+
+async function removeImageObjectIfAny(imageUrl) {
+  const storagePath = getStoragePathFromPublicUrl(imageUrl);
+  if (!storagePath) return;
+
+  const { error } = await supabase.storage.from(POI_IMAGE_BUCKET).remove([storagePath]);
+  if (error) {
+    throw new Error(`Không thể xóa file ảnh trên Storage: ${error.message}`);
+  }
+}
+
 function renderTable() {
   const search = document.getElementById("search-poi").value.trim().toLowerCase();
   const body = document.getElementById("poi-table-body");
@@ -200,6 +223,7 @@ async function removePoi(id) {
 
     const imageRow = state.imageMap.get(id);
     if (imageRow?.id) {
+      await removeImageObjectIfAny(imageRow.image_url);
       const { error: imageDeleteError } = await supabase.from(TABLES.IMAGE).delete().eq("id", imageRow.id);
       if (imageDeleteError) throw imageDeleteError;
     }
