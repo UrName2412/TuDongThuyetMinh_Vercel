@@ -1,6 +1,6 @@
 import { supabase } from "./supabase-client.js";
 import { POI_IMAGE_BUCKET, TABLES, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "./supabase-config.js";
-import { requireAdmin, renderSidebar, showToast, sanitizeText } from "./admin-common.js";
+import { requireAdmin, renderSidebar, showToast, sanitizeText, safeGetValue, safeSetValue } from "./admin-common.js";
 import { getPois, getImagesByPoiIds } from "./data-service.js";
 
 const state = {
