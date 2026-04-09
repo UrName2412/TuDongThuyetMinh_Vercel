@@ -1,12 +1,13 @@
 import { supabase } from "./supabase-client.js";
 import { POI_IMAGE_BUCKET, TABLES, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "./supabase-config.js";
 import { sanitizeText, showToast, safeGetValue } from "./admin-common.js";
-import { getImagesByPoiIds, getPois } from "./data-service.js";
+import { getImagesByPoiIds, getImageRowsByPoiIds, getPois } from "./data-service.js";
 
 export async function loadPoiDataset() {
   const pois = await getPois();
   const imageMap = await getImagesByPoiIds(pois.map((item) => item.id));
-  return { pois, imageMap };
+  const imageRowsMap = await getImageRowsByPoiIds(pois.map((item) => item.id));
+  return { pois, imageMap, imageRowsMap };
 }
 
 export function renderPoiRows(pois, imageMap) {
@@ -71,7 +72,7 @@ async function removeImageObjectIfAny(imageUrl) {
   }
 }
 
-export async function deletePoi(id, imageMap) {
+export async function deletePoi(id) {
   console.log(`[DELETE POI] Starting deletion for POI ID: ${id}`);
   const canDelete = await ensureCanDeletePoi(id);
   if (!canDelete) {
@@ -81,20 +82,21 @@ export async function deletePoi(id, imageMap) {
     return false;
   }
 
-  const imageRow = imageMap.get(id);
-  if (imageRow?.image_url) {
-    console.log(`[DELETE POI] Found associated image: ${imageRow.image_url}`);
-    try {
-      await removeImageObjectIfAny(imageRow.image_url);
-      console.log(`[DELETE POI] Successfully removed image from Storage.`);
-    } catch (storageError) {
-      console.error("[DELETE POI] Error removing image from storage:", storageError);
-      // Decide if you want to stop the process or just log the error and continue
-      // For now, we'll throw to make it visible that something went wrong.
-      throw storageError;
+  const { data: imageRows, error: imageFetchError } = await supabase
+    .from(TABLES.IMAGE)
+    .select("id,image_url")
+    .eq("poi_id", id);
+  if (imageFetchError) throw imageFetchError;
+
+  if (imageRows && imageRows.length > 0) {
+    for (const row of imageRows) {
+      if (row?.image_url) {
+        await removeImageObjectIfAny(row.image_url);
+      }
     }
-  } else {
-    console.log(`[DELETE POI] No associated image found for POI ID: ${id}`);
+
+    const { error: deleteImageRowsError } = await supabase.from(TABLES.IMAGE).delete().eq("poi_id", id);
+    if (deleteImageRowsError) throw deleteImageRowsError;
   }
 
   // Now, delete the POI record itself.
@@ -141,37 +143,46 @@ export function initPickerMap(mapId, latInputId, lngInputId, initialLat = null, 
   return map;
 }
 
-async function uploadImageIfAny(file, poiId) {
-  if (!file) return null;
-  
-  // Validate file
-  if (file.size > 5 * 1024 * 1024) {
-    throw new Error("File ảnh quá lớn (tối đa 5MB)");
-  }
-  if (!file.type.startsWith('image/')) {
-    throw new Error("Chỉ chấp nhận file ảnh");
-  }
-  
-  const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
-  const path = `poi/${poiId}/${Date.now()}.${ext}`;
+async function uploadImagesIfAny(files, poiId) {
+  if (!files || files.length === 0) return [];
 
-  console.log(`[UPLOAD] Starting upload to ${POI_IMAGE_BUCKET}/${path}, size: ${file.size}, type: ${file.type}`);
-  
-  const { error: uploadError } = await supabase.storage
-    .from(POI_IMAGE_BUCKET)
-    .upload(path, file, {
-      upsert: true,
-      contentType: file.type || "image/jpeg"
-    });
-    
-  if (uploadError) {
-    console.error("[UPLOAD ERROR]", uploadError);
-    throw new Error(`Upload ảnh thất bại: ${uploadError.message}`);
+  const uploadedUrls = [];
+  for (const [index, file] of files.entries()) {
+    if (file.size > 5 * 1024 * 1024) {
+      throw new Error("File ảnh quá lớn (tối đa 5MB)");
+    }
+    if (!file.type.startsWith("image/")) {
+      throw new Error("Chỉ chấp nhận file ảnh");
+    }
+
+    const ext = file.name.split(".").pop()?.toLowerCase() || "jpg";
+    const path = `poi/${poiId}/${Date.now()}-${index}.${ext}`;
+
+    const { error: uploadError } = await supabase.storage
+      .from(POI_IMAGE_BUCKET)
+      .upload(path, file, {
+        upsert: true,
+        contentType: file.type || "image/jpeg"
+      });
+
+    if (uploadError) {
+      throw new Error(`Upload ảnh thất bại: ${uploadError.message}`);
+    }
+
+    const { data } = supabase.storage.from(POI_IMAGE_BUCKET).getPublicUrl(path);
+    uploadedUrls.push(data.publicUrl);
   }
 
-  const { data } = supabase.storage.from(POI_IMAGE_BUCKET).getPublicUrl(path);
-  console.log("[UPLOAD SUCCESS]", data.publicUrl);
-  return data.publicUrl;
+  return uploadedUrls;
+}
+
+async function saveImageRows(poiId, imageUrls) {
+  if (!imageUrls || imageUrls.length === 0) return;
+  const rows = imageUrls.map((url) => ({ poi_id: poiId, image_url: url }));
+  const { error } = await supabase.from(TABLES.IMAGE).insert(rows);
+  if (error) {
+    throw new Error(`Lưu ảnh thất bại: ${error.message}`);
+  }
 }
 
 export async function createPoiFromForm() {
@@ -209,26 +220,15 @@ export async function createPoiFromForm() {
   }
   console.log("[POI CREATED]", data.id);
 
-  const file = document.getElementById("poi-image").files[0];
-  if (file) {
-    const imageUrl = await uploadImageIfAny(file, data.id);
-    console.log("[IMAGE INSERT]", { poi_id: data.id, image_url: imageUrl });
-    const { error: imageError } = await supabase
-      .from(TABLES.IMAGE)
-      .insert({ poi_id: data.id, image_url: imageUrl });
-      
-    if (imageError) {
-      console.error("[IMAGE INSERT ERROR]", imageError);
-      throw new Error(`Lưu ảnh thất bại: ${imageError.message}`);
-    }
-    console.log("[IMAGE SAVED SUCCESS]");
-  }
+  const files = Array.from(document.getElementById("poi-image").files || []);
+  const imageUrls = await uploadImagesIfAny(files, data.id);
+  await saveImageRows(data.id, imageUrls);
 
   console.log("[CREATE POI] COMPLETED");
   return data.id;
 }
 
-export async function updatePoiFromForm(poiId, existingImageRow) {
+export async function updatePoiFromForm(poiId) {
   const payload = {
     name: safeGetValue("poi-name"),
     description: safeGetValue("poi-description"),
@@ -244,15 +244,7 @@ export async function updatePoiFromForm(poiId, existingImageRow) {
   const { error } = await supabase.from(TABLES.POI).update(payload).eq("id", poiId);
   if (error) throw error;
 
-  const file = document.getElementById("poi-image").files[0];
-  if (file) {
-    const imageUrl = await uploadImageIfAny(file, poiId);
-    if (existingImageRow?.id) {
-      const { error: imageError } = await supabase.from(TABLES.IMAGE).update({ image_url: imageUrl }).eq("id", existingImageRow.id);
-      if (imageError) throw imageError;
-    } else {
-      const { error: imageError } = await supabase.from(TABLES.IMAGE).insert({ poi_id: poiId, image_url: imageUrl });
-      if (imageError) throw imageError;
-    }
-  }
+  const files = Array.from(document.getElementById("poi-image").files || []);
+  const imageUrls = await uploadImagesIfAny(files, poiId);
+  await saveImageRows(poiId, imageUrls);
 }

@@ -11,9 +11,10 @@ async function init() {
     return;
   }
 
-  const { pois, imageMap } = await loadPoiDataset();
+  const { pois, imageMap, imageRowsMap } = await loadPoiDataset();
   const poi = pois.find((item) => Number(item.id) === id);
   const imageRow = imageMap.get(id);
+  const imageRows = imageRowsMap.get(id) || [];
 
   if (!poi) {
     window.location.href = "list_poi.html";
@@ -26,9 +27,11 @@ async function init() {
   safeSetValue("poi-lng", poi.longitude);
   safeSetValue("poi-radius", poi.radius);
 
-  document.getElementById("current-image").innerHTML = imageRow?.image_url
-    ? `<img class="poi-thumbnail" src="${sanitizeText(imageRow.image_url)}" alt="Ảnh POI">`
-    : "Chưa có ảnh.";
+  document.getElementById("current-image").innerHTML = imageRows.length > 0
+    ? imageRows
+        .map((row) => `<a class="image-link" target="_blank" rel="noopener noreferrer" href="${sanitizeText(row.image_url || "")}"><img class="poi-thumbnail" src="${sanitizeText(row.image_url || "")}" alt="Ảnh POI"></a>`)
+        .join(" ")
+    : (imageRow?.image_url ? `<img class="poi-thumbnail" src="${sanitizeText(imageRow.image_url)}" alt="Ảnh POI">` : "Chưa có ảnh.");
 
   // Đảm bảo DOM ready cho map
   await new Promise(resolve => {
@@ -44,7 +47,7 @@ async function init() {
   document.getElementById("poi-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     try {
-      await updatePoiFromForm(id, imageRow);
+      await updatePoiFromForm(id);
       showToast("Cập nhật POI thành công", "add");
       setTimeout(() => {
         window.location.href = "list_poi.html?updated=1";
