@@ -32,9 +32,7 @@ export function renderPoiRows(pois, imageMap) {
 }
 
 export async function ensureCanDeletePoi(id) {
-  const { data, error } = await supabase.from(TABLES.TOUR_POI).select("tour_id").eq("poi_id", id).limit(1);
-  if (error) throw error;
-  return !(data && data.length > 0);
+  return true;
 }
 
 function getStoragePathFromPublicUrl(url) {
@@ -74,13 +72,6 @@ async function removeImageObjectIfAny(imageUrl) {
 
 export async function deletePoi(id) {
   console.log(`[DELETE POI] Starting deletion for POI ID: ${id}`);
-  const canDelete = await ensureCanDeletePoi(id);
-  if (!canDelete) {
-    const message = "Không thể xóa POI vì nó đang được sử dụng trong một hoặc nhiều tour.";
-    console.warn(`[DELETE POI] Aborted: ${message}`);
-    showToast(message, "delete");
-    return false;
-  }
 
   const { data: imageRows, error: imageFetchError } = await supabase
     .from(TABLES.IMAGE)
@@ -100,8 +91,6 @@ export async function deletePoi(id) {
   }
 
   // Now, delete the POI record itself.
-  // The 'image' table has a foreign key with cascade delete, 
-  // so the image record will be deleted automatically when the POI is deleted.
   console.log(`[DELETE POI] Deleting POI record from table '${TABLES.POI}'...`);
   const { error } = await supabase.from(TABLES.POI).delete().eq("id", id);
   if (error) {

@@ -7,25 +7,19 @@ async function loadDashboard() {
   await requireAdmin();
   renderSidebar("dashboard");
 
-  const [poiRes, tourRes] = await Promise.all([
-    supabase.from(TABLES.POI).select("id,name,description,latitude,longitude,radius").order("id", { ascending: false }),
-    supabase.from(TABLES.TOUR).select("id,name,description").order("id", { ascending: false })
-  ]);
+  const poiRes = await supabase.from(TABLES.POI).select("id,name,description,latitude,longitude,radius").order("id", { ascending: false });
 
-  if (poiRes.error || tourRes.error) {
-    alert(`Khong the tai dashboard. ${poiRes.error?.message || ""} ${tourRes.error?.message || ""}`);
+  if (poiRes.error) {
+    alert(`Khong the tai dashboard. ${poiRes.error?.message || ""}`);
     return;
   }
 
   const pois = poiRes.data || [];
-  const tours = tourRes.data || [];
   const imageMap = await getImagesByPoiIds(pois.map((item) => item.id));
 
   document.getElementById("stat-poi-total").textContent = formatNumber(pois.length);
   document.getElementById("stat-poi-latest").textContent = pois[0]?.name || "N/A";
   document.getElementById("stat-radius-max").textContent = `${formatNumber(Math.max(0, ...pois.map((p) => Number(p.radius || 0))))} m`;
-  document.getElementById("stat-tour-total").textContent = formatNumber(tours.length);
-  document.getElementById("stat-tour-latest").textContent = tours[0]?.name || "N/A";
 
   const poiBody = document.getElementById("recent-poi-body");
   poiBody.innerHTML = pois.slice(0, 5).map((poi) => {
@@ -46,15 +40,6 @@ async function loadDashboard() {
       </tr>
     `;
   }).join("");
-
-  const tourBody = document.getElementById("recent-tour-body");
-  tourBody.innerHTML = tours.slice(0, 5).map((tour) => `
-    <tr>
-      <td>${tour.id}</td>
-      <td>${sanitizeText(tour.name)}</td>
-      <td>${sanitizeText(tour.description || "")}</td>
-    </tr>
-  `).join("");
 }
 
 loadDashboard();

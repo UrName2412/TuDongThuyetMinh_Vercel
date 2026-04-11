@@ -220,18 +220,6 @@ async function removePoi(id) {
   if (!yes) return;
 
   try {
-    const { data: links, error: linkError } = await supabase
-      .from(TABLES.TOUR_POI)
-      .select("tour_id")
-      .eq("poi_id", id)
-      .limit(1);
-
-    if (linkError) throw linkError;
-    if (links && links.length > 0) {
-      showToast("Không thể xóa POI vì nó đang được sử dụng trong tour", "delete");
-      return;
-    }
-
     const imageRow = state.imageMap.get(id);
     if (imageRow?.id) {
       await removeImageObjectIfAny(imageRow.image_url);

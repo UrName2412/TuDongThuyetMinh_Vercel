@@ -10,9 +10,7 @@ export const ADMIN_EMAIL_WHITELIST = [
 // Keep table names aligned with your Supabase schema.
 export const TABLES = {
   POI: "poi",
-  IMAGE: "Image",
-  TOUR: "Tour",
-  TOUR_POI: "TourPoi"
+  IMAGE: "Image"
 };
 
 // Storage bucket used for POI images.

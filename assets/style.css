@@ -170,8 +170,7 @@ tr:hover {
 }
 
 .image-link img,
-.poi-thumbnail,
-.tour-poi-thumbnail {
+.poi-thumbnail {
     display: block;
     width: 80px;
     height: 60px;

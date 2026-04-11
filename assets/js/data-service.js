@@ -45,20 +45,3 @@ export async function getImageRowsByPoiIds(poiIds) {
   }
   return map;
 }
-
-export async function getTours() {
-  const { data, error } = await supabase.from(TABLES.TOUR).select("*").order("id", { ascending: false });
-  if (error) throw error;
-  return data || [];
-}
-
-export async function getTourPoiRows(tourIds) {
-  if (!tourIds || tourIds.length === 0) return [];
-  const { data, error } = await supabase
-    .from(TABLES.TOUR_POI)
-    .select("tour_id,poi_id,order")
-    .in("tour_id", tourIds)
-    .order("order", { ascending: true });
-  if (error) throw error;
-  return data || [];
-}

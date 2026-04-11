@@ -8,8 +8,7 @@ export function renderSidebar(activePage) {
   const links = [
     { key: "dashboard", label: "Dashboard", href: "dashboard.html" },
     { key: "list", label: "Danh sách POI", href: "list_poi.html" },
-    { key: "map", label: "Map POI", href: "map_poi.html" },
-    { key: "tour", label: "Quản lý Tours", href: "manage_tour.html" }
+    { key: "map", label: "Map POI", href: "map_poi.html" }
   ];
 
   nav.innerHTML = `
