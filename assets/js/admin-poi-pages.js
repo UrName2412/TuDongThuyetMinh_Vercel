@@ -187,7 +187,7 @@ async function saveImageRows(poiId, imageUrls) {
 
 export async function createPoiFromForm() {
   console.log("[CREATE POI] Starting...");
-  
+
   // Refresh session
   const { data: { session } } = await supabase.auth.getSession();
   console.log("[SESSION]", session ? "Active" : "No session!");
@@ -200,7 +200,8 @@ export async function createPoiFromForm() {
     description: safeGetValue("poi-description"),
     latitude: Number(safeGetValue("poi-lat")),
     longitude: Number(safeGetValue("poi-lng")),
-    radius: Number(safeGetValue("poi-radius"))
+    radius: Number(safeGetValue("poi-radius")),
+    map_link: safeGetValue("poi-map-link") || null
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
@@ -234,7 +235,8 @@ export async function updatePoiFromForm(poiId) {
     description: safeGetValue("poi-description"),
     latitude: Number(safeGetValue("poi-lat")),
     longitude: Number(safeGetValue("poi-lng")),
-    radius: Number(safeGetValue("poi-radius"))
+    radius: Number(safeGetValue("poi-radius")),
+    map_link: safeGetValue("poi-map-link") || null
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
