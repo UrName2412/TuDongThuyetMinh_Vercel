@@ -1,49 +1,101 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sửa POI</title>
+
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+
+  <style>
+    .poi-layout {
+      display: flex;
+      gap: 30px;
+      width: 1000px;
+    }
+
+    .poi-form {
+      flex: 1;
+    }
+
+    .poi-map {
+      flex: 1.3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    #map {
+      flex: 1;
+      min-height: 520px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    #current-image img {
+      width: 120px;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
+
 <body>
   <div class="admin">
     <aside id="admin-sidebar" class="sidebar"></aside>
+
     <div class="content">
       <div class="main-content main-center">
-        <div class="container">
-          <h2>Sửa POI</h2>
-          <form id="poi-form">
-            <label for="poi-name">Tên quầy</label>
-            <input id="poi-name" required>
 
-            <label for="poi-description">Mô tả</label>
-            <textarea id="poi-description" rows="4" required></textarea>
+        <div class="container poi-layout">
 
-            <label>Ảnh hiện tại</label>
-            <div id="current-image">-</div>
+          <!-- FORM -->
+          <div class="poi-form">
+            <h2>Sửa POI</h2>
 
-            <label for="poi-image">Thêm ảnh mới</label>
-            <input id="poi-image" type="file" accept="image/*" multiple>
+            <form id="poi-form">
 
-<label for="poi-lat">Latitude</label>
-            <input id="poi-lat" readonly required>
+              <label for="poi-name">Tên quầy</label>
+              <input id="poi-name" required>
 
-            <label for="poi-lng">Longitude</label>
-            <input id="poi-lng" readonly required>
+              <label for="poi-description">Mô tả</label>
+              <textarea id="poi-description" rows="4" required></textarea>
 
+              <label>Ảnh hiện tại</label>
+              <div id="current-image">-</div>
+
+              <label for="poi-image">Thêm ảnh mới</label>
+              <input id="poi-image" type="file" accept="image/*" multiple>
+
+              <label for="poi-lat">Latitude</label>
+              <input id="poi-lat" readonly required>
+
+              <label for="poi-lng">Longitude</label>
+              <input id="poi-lng" readonly required>
+
+              <label for="poi-radius">Radius (m)</label>
+              <input id="poi-radius" type="number" min="1" required>
+
+              <label for="poi-map-link">Link bản đồ (Map Link)</label>
+              <input id="poi-map-link" type="url" placeholder="https://maps.google.com/...">
+
+              <button type="submit">Cập nhật</button>
+
+            </form>
+          </div>
+
+          <!-- MAP -->
+          <div class="poi-map">
+            <label style="font-weight:600; margin-bottom:10px;">Chọn vị trí trên bản đồ</label>
             <div id="map"></div>
+          </div>
 
-            <label for="poi-radius">Radius (m)</label>
-            <input id="poi-radius" type="number" min="1" required>
-
-            <label for="poi-map-link">Link bản đồ (Map Link)</label>
-            <input id="poi-map-link" type="url" placeholder="https://maps.google.com/...">
-
-            <button type="submit">Cập nhật</button>
-          </form>
         </div>
+
       </div>
     </div>
   </div>
@@ -51,4 +103,5 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="../assets/js/admin-edit-poi.js"></script>
 </body>
+
 </html>
