@@ -108,27 +108,50 @@ export function initPickerMap(mapId, latInputId, lngInputId, initialLat = null, 
   const lng = Number(initialLng || DEFAULT_MAP_CENTER[1]);
 
   const map = L.map(mapId).setView([lat, lng], DEFAULT_MAP_ZOOM + 1);
+
   L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
     attribution: "&copy; OpenStreetMap contributors"
   }).addTo(map);
 
   let marker = null;
-  if (initialLat && initialLng) {
-    marker = L.marker([lat, lng]).addTo(map);
+
+  function setMarker(newLat, newLng) {
+    if (marker) {
+      marker.setLatLng([newLat, newLng]);
+    } else {
+      marker = L.marker([newLat, newLng]).addTo(map);
+    }
+    map.setView([newLat, newLng], 15);
   }
 
+  // Nếu có initial → set marker
+  if (initialLat && initialLng) {
+    setMarker(lat, lng);
+  }
+
+  // ✅ CLICK MAP → UPDATE INPUT
   map.on("click", (event) => {
     const pickedLat = event.latlng.lat;
     const pickedLng = event.latlng.lng;
+
     document.getElementById(latInputId).value = pickedLat;
     document.getElementById(lngInputId).value = pickedLng;
 
-    if (marker) {
-      marker.setLatLng([pickedLat, pickedLng]);
-    } else {
-      marker = L.marker([pickedLat, pickedLng]).addTo(map);
-    }
+    setMarker(pickedLat, pickedLng);
   });
+
+  // ✅ INPUT → UPDATE MAP
+  function updateFromInput() {
+    const latVal = parseFloat(document.getElementById(latInputId).value);
+    const lngVal = parseFloat(document.getElementById(lngInputId).value);
+
+    if (!isNaN(latVal) && !isNaN(lngVal)) {
+      setMarker(latVal, lngVal);
+    }
+  }
+
+  document.getElementById(latInputId).addEventListener("change", updateFromInput);
+  document.getElementById(lngInputId).addEventListener("change", updateFromInput);
 
   return map;
 }
