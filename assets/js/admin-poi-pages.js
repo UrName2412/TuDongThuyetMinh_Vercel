@@ -210,7 +210,7 @@ export async function createPoiFromForm() {
 
   const latRaw = safeGetValue("poi-lat");
   const lngRaw = safeGetValue("poi-lng");
-  const radiusRaw = safeGetValue("poi-radius");
+  const radiusRaw = safeGetValue("poi-radius") || "50";
 
   if (!safeGetValue("poi-name")) {
     throw new Error("Vui lòng nhập tên POI");
@@ -235,7 +235,7 @@ export async function createPoiFromForm() {
     throw new Error("Longitude phải trong khoảng -500 đến 500");
   }
 
-  if (radiusRaw === "" || isNaN(radiusRaw)) {
+  if (isNaN(radiusRaw)) {
     throw new Error("Radius phải là số");
   }
 
