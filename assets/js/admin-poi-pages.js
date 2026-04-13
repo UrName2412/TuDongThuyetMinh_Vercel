@@ -10,6 +10,7 @@ export async function loadPoiDataset() {
   return { pois, imageMap, imageRowsMap };
 }
 
+//render hàng poi
 export function renderPoiRows(pois, imageMap) {
   return pois.map((poi) => {
     const imageUrl = imageMap.get(poi.id)?.image_url || "";
@@ -43,12 +44,12 @@ function getStoragePathFromPublicUrl(url) {
     // e.g., /storage/v1/object/public/images/poi/123/thumb.jpg -> poi/123/thumb.jpg
     const pathSegments = urlObject.pathname.split('/');
     const bucketNameIndex = pathSegments.indexOf(POI_IMAGE_BUCKET);
-    
+
     if (bucketNameIndex === -1 || bucketNameIndex + 1 >= pathSegments.length) {
       console.warn(`[DELETE] Could not find bucket '${POI_IMAGE_BUCKET}' in URL path: ${urlObject.pathname}`);
       return null;
     }
-    
+
     // Join the parts of the path *after* the bucket name
     const storagePath = pathSegments.slice(bucketNameIndex + 1).join('/');
     const decodedPath = decodeURIComponent(storagePath);
@@ -184,18 +185,45 @@ export async function createPoiFromForm() {
     throw new Error("Phiên đăng nhập hết hạn. Vui lòng đăng nhập lại!");
   }
 
+  const latRaw = safeGetValue("poi-lat");
+  const lngRaw = safeGetValue("poi-lng");
+  const radiusRaw = safeGetValue("poi-radius");
+
+  if (!safeGetValue("poi-name")) {
+    throw new Error("Vui lòng nhập tên POI");
+  }
+
+  if (latRaw === "" || lngRaw === "") {
+    throw new Error("Vui lòng nhập hoặc chọn vị trí");
+  }
+
+  if (isNaN(latRaw) || isNaN(lngRaw)) {
+    throw new Error("Latitude và Longitude phải là số");
+  }
+
+  const lat = parseFloat(latRaw);
+  const lng = parseFloat(lngRaw);
+
+  if (lat < -90 || lat > 90) {
+    throw new Error("Latitude phải trong khoảng -90 đến 90");
+  }
+
+  if (lng < -500 || lng > 500) {
+    throw new Error("Longitude phải trong khoảng -500 đến 500");
+  }
+
+  if (radiusRaw === "" || isNaN(radiusRaw)) {
+    throw new Error("Radius phải là số");
+  }
+
   const payload = {
     name: safeGetValue("poi-name"),
     description: safeGetValue("poi-description"),
-    latitude: Number(safeGetValue("poi-lat")),
-    longitude: Number(safeGetValue("poi-lng")),
-    radius: Number(safeGetValue("poi-radius")),
+    latitude: lat,
+    longitude: lng,
+    radius: Number(radiusRaw),
     map_link: safeGetValue("poi-map-link") || null
   };
-
-  if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
-    throw new Error("Vui lòng nhập đủ thông tin và chọn vị trí trên bản đồ!");
-  }
 
   console.log("[POI INSERT]", payload);
   const { data, error: poiError } = await supabase
@@ -203,7 +231,7 @@ export async function createPoiFromForm() {
     .insert(payload)
     .select("id")
     .single();
-    
+
   if (poiError) {
     console.error("[POI INSERT ERROR]", poiError);
     throw new Error(`Tạo POI thất bại: ${poiError.message}`);

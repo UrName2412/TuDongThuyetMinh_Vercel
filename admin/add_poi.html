@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
+
 <body>
   <div class="admin">
     <aside id="admin-sidebar" class="sidebar"></aside>
@@ -25,16 +27,16 @@
             <input id="poi-image" type="file" accept="image/*" multiple>
 
             <label for="poi-lat">Latitude</label>
-            <input id="poi-lat" readonly required>
+            <input id="poi-lat" required>
 
             <label for="poi-lng">Longitude</label>
-            <input id="poi-lng" readonly required>
+            <input id="poi-lng" required>
 
             <label for="poi-radius">Radius (m)</label>
             <input id="poi-radius" type="number" min="1" required>
 
             <label for="poi-map-link">Link bản đồ (Map Link)</label>
-            <input id="poi-map-link" type="url" placeholder="https://maps.google.com/...">
+            <input id="poi-map-link" type="text" placeholder="Link bản đồ (không bắt buộc)">
 
             <div id="map"></div>
             <button type="submit">Thêm POI</button>
@@ -47,4 +49,5 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="../assets/js/admin-add-poi.js"></script>
 </body>
+
 </html>
