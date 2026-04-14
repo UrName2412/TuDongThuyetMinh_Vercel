@@ -1,20 +1,10 @@
 import { supabase } from "./supabase-client.js";
 import { TABLES } from "./supabase-config.js";
 import { requireAdmin, renderSidebar, formatNumber, sanitizeText } from "./admin-common.js";
-import { getPoiVisitStats } from "./data-service.js";
 
-function formatDateTime(value) {
-  if (!value) return "-";
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) return "-";
-  return new Intl.DateTimeFormat("vi-VN", {
-    hour12: false,
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit"
-  }).format(date);
+function getPoiVisitValue(poi) {
+  const field = Object.keys(poi).find((key) => key.toLowerCase() === "poivisit");
+  return Number((field && poi[field]) || 0);
 }
 
 async function loadDashboard() {
@@ -29,15 +19,14 @@ async function loadDashboard() {
   }
 
   const pois = poiRes.data || [];
-  const visitStats = await getPoiVisitStats(pois.map((item) => item.id));
-
   document.getElementById("stat-poi-total").textContent = formatNumber(pois.length);
-  document.getElementById("stat-qr-total").textContent = formatNumber(visitStats.total);
+  const totalQrVisits = pois.reduce((sum, poi) => sum + getPoiVisitValue(poi), 0);
+  document.getElementById("stat-qr-total").textContent = formatNumber(totalQrVisits);
 
   const sortedPoisByVisits = pois
     .map(poi => ({
       ...poi,
-      visitCount: visitStats.countByPoiId.get(Number(poi.id)) || 0
+      visitCount: getPoiVisitValue(poi)
     }))
     .sort((a, b) => b.visitCount - a.visitCount);
 
@@ -55,7 +44,7 @@ async function loadDashboard() {
 
 supabase
   .channel('poi_visits')
-  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: TABLES.POI_VISIT }, loadDashboard)
+  .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: TABLES.POI }, loadDashboard)
   .subscribe();
 
 loadDashboard();

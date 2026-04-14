@@ -60,17 +60,22 @@ export async function recordPoiVisit(poiId, source = "qr") {
 
   const { data: poiRow, error: poiReadError } = await supabase
     .from(TABLES.POI)
-    .select("id,PoiVisit")
+    .select("*")
     .eq("id", id)
     .maybeSingle();
 
   if (poiReadError) throw poiReadError;
   if (!poiRow) throw new Error("POI khong ton tai");
 
-  const currentVisit = Number(poiRow.PoiVisit || 0);
+  const visitField = Object.keys(poiRow).find((key) => key.toLowerCase() === "poivisit");
+  if (!visitField) {
+    throw new Error("Bang POI chua co cot PoiVisit/poivisit");
+  }
+
+  const currentVisit = Number(poiRow[visitField] || 0);
   const { error: poiUpdateError } = await supabase
     .from(TABLES.POI)
-    .update({ PoiVisit: currentVisit + 1 })
+    .update({ [visitField]: currentVisit + 1 })
     .eq("id", id);
 
   if (poiUpdateError) throw poiUpdateError;
