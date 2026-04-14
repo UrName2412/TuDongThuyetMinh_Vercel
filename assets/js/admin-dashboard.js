@@ -78,4 +78,9 @@ async function loadDashboard() {
   }).join("");
 }
 
+supabase
+  .channel('poi_visits')
+  .on('postgres_changes', { event: 'INSERT', schema: 'public', table: TABLES.POI_VISIT }, loadDashboard)
+  .subscribe();
+
 loadDashboard();
