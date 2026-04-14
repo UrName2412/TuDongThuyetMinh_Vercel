@@ -109,11 +109,6 @@ export async function deletePoi(id) {
     if (deleteImageRowsError) throw deleteImageRowsError;
   }
 
-  const { error: deleteVisitRowsError } = await supabase.from(TABLES.POI_VISIT).delete().eq("poi_id", id);
-  if (deleteVisitRowsError) {
-    throw new Error(`Không thể xóa lịch sử QR của POI: ${deleteVisitRowsError.message}`);
-  }
-
   // Now, delete the POI record itself.
   console.log(`[DELETE POI] Deleting POI record from table '${TABLES.POI}'...`);
   const { error } = await supabase.from(TABLES.POI).delete().eq("id", id);

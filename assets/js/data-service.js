@@ -86,15 +86,6 @@ export async function recordPoiVisit(poiId, source = "qr") {
     throw new Error("Khong cap nhat duoc bo dem PoiVisit. Kiem tra RLS/policy UPDATE cho bang poi.");
   }
 
-  // Keep detailed visit log when table exists, but do not block check-in if this step fails.
-  const payload = {
-    poi_id: id,
-    source
-  };
-  const { error: logInsertError } = await supabase.from(TABLES.POI_VISIT).insert(payload);
-  if (logInsertError) {
-    console.warn("[recordPoiVisit] Insert PoiVisit log failed:", logInsertError.message || logInsertError);
-  }
 }
 
 export async function getPoiVisitStats(poiIds) {
@@ -106,27 +97,24 @@ export async function getPoiVisitStats(poiIds) {
     };
   }
 
-  const { data, error } = await supabase
-    .from(TABLES.POI_VISIT)
-    .select("poi_id,created_at")
-    .in("poi_id", poiIds)
-    .order("created_at", { ascending: false });
-
-  if (error) throw error;
-
   const countByPoiId = new Map();
   const latestByPoiId = new Map();
 
-  for (const row of data || []) {
-    const poiId = Number(row.poi_id);
-    countByPoiId.set(poiId, (countByPoiId.get(poiId) || 0) + 1);
-    if (!latestByPoiId.has(poiId)) {
-      latestByPoiId.set(poiId, row.created_at || null);
-    }
+  const { data: poiRows, error: poiError } = await supabase
+    .from(TABLES.POI)
+    .select("id,PoiVisit")
+    .in("id", poiIds)
+    .order("id", { ascending: false });
+
+  if (poiError) throw poiError;
+
+  for (const row of poiRows || []) {
+    const poiId = Number(row.id);
+    countByPoiId.set(poiId, Number(row.PoiVisit || 0));
   }
 
   return {
-    total: (data || []).length,
+    total: Array.from(countByPoiId.values()).reduce((sum, value) => sum + value, 0),
     countByPoiId,
     latestByPoiId
   };
