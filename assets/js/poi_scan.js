@@ -1,13 +1,39 @@
 import { sanitizeText } from "./admin-common.js";
 import { getPoiById, recordPoiVisit } from "./data-service.js";
 
+const QR_CHECKIN_COOLDOWN_MS = 30000;
+
+function getVisitCacheKey(poiId) {
+    return `qr_checkin_last_${poiId}`;
+}
+
+function canRecordVisit(poiId) {
+    try {
+        const key = getVisitCacheKey(poiId);
+        const lastVisit = Number(localStorage.getItem(key) || "0");
+        if (!lastVisit) return true;
+        return Date.now() - lastVisit >= QR_CHECKIN_COOLDOWN_MS;
+    } catch (_) {
+        return true;
+    }
+}
+
+function markVisitRecorded(poiId) {
+    try {
+        localStorage.setItem(getVisitCacheKey(poiId), String(Date.now()));
+    } catch (_) {
+        // Ignore storage errors to avoid blocking check-in flow.
+    }
+}
+
 async function initPoiScanPage() {
     const statusEl = document.getElementById("scan-status");
     const nameEl = document.getElementById("scan-poi-name");
     const mapLinkEl = document.getElementById("scan-map-link");
 
-    const poiId = Number(new URLSearchParams(window.location.search).get("poi") || "0");
-    if (!poiId) {
+    const poiParam = new URLSearchParams(window.location.search).get("poi");
+    const poiId = Number(poiParam);
+    if (!poiParam || !Number.isInteger(poiId) || poiId <= 0) {
         statusEl.textContent = "QR khong hop le: thieu ma POI.";
         return;
     }
@@ -19,13 +45,17 @@ async function initPoiScanPage() {
     }
 
     nameEl.innerHTML = `<strong>${sanitizeText(poi.name || "POI")}</strong>`;
-    await recordPoiVisit(poiId, "qr_web");
-    statusEl.textContent = `Da ghi nhan luot truy cap QR cho ${sanitizeText(poi.name || "POI")}.`;
-
-    if (poi.map_link) {
-        mapLinkEl.href = poi.map_link;
-        mapLinkEl.style.display = "inline-block";
+    if (canRecordVisit(poiId)) {
+        await recordPoiVisit(poiId, "qr_web");
+        markVisitRecorded(poiId);
+        statusEl.textContent = `Da ghi nhan luot truy cap QR cho ${sanitizeText(poi.name || "POI")}.`;
+    } else {
+        statusEl.textContent = `Ban vua quet POI ${sanitizeText(poi.name || "POI")} gan day. He thong khong cong them luot trong 30 giay.`;
     }
+
+    const fallbackMapUrl = `${window.location.origin}/map/map.html`;
+    mapLinkEl.href = poi.map_link || fallbackMapUrl;
+    mapLinkEl.style.display = "inline-block";
 }
 
 initPoiScanPage().catch((error) => {
