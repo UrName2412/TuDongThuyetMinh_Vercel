@@ -32,21 +32,26 @@ async function loadDashboard() {
   const imageMap = await getImagesByPoiIds(pois.map((item) => item.id));
   const visitStats = await getPoiVisitStats(pois.map((item) => item.id));
 
-  const mostVisitedPoi = pois.reduce((best, poi) => {
-    const currentCount = visitStats.countByPoiId.get(Number(poi.id)) || 0;
-    if (!best || currentCount > best.count) {
-      return { name: poi.name || `POI ${poi.id}`, count: currentCount };
-    }
-    return best;
-  }, null);
-
   document.getElementById("stat-poi-total").textContent = formatNumber(pois.length);
-  document.getElementById("stat-poi-latest").textContent = pois[0]?.name || "N/A";
-  document.getElementById("stat-radius-max").textContent = `${formatNumber(Math.max(0, ...pois.map((p) => Number(p.radius || 0))))} m`;
   document.getElementById("stat-qr-total").textContent = formatNumber(visitStats.total);
-  document.getElementById("stat-qr-top-poi").textContent = mostVisitedPoi
-    ? `${mostVisitedPoi.name} (${formatNumber(mostVisitedPoi.count)})`
-    : "N/A";
+
+  const sortedPoisByVisits = pois
+    .map(poi => ({
+      ...poi,
+      visitCount: visitStats.countByPoiId.get(Number(poi.id)) || 0
+    }))
+    .sort((a, b) => b.visitCount - a.visitCount);
+
+  const topVisitedPoiBody = document.getElementById("top-visited-poi-body");
+  topVisitedPoiBody.innerHTML = sortedPoisByVisits.slice(0, 5).map((poi) => {
+    return `
+      <tr>
+        <td>${poi.id}</td>
+        <td>${sanitizeText(poi.name)}</td>
+        <td>${formatNumber(poi.visitCount)}</td>
+      </tr>
+    `;
+  }).join("");
 
   const poiBody = document.getElementById("recent-poi-body");
   poiBody.innerHTML = pois.slice(0, 5).map((poi) => {

@@ -19,22 +19,24 @@
             <h3>Tổng POI</h3>
             <p id="stat-poi-total">0</p>
           </article>
-          <article class="card green">
-            <h3>POI mới nhất</h3>
-            <p id="stat-poi-latest">N/A</p>
-          </article>
-          <article class="card orange">
-            <h3>Radius lớn nhất</h3>
-            <p id="stat-radius-max">0 m</p>
-          </article>
           <article class="card sky">
             <h3>Tổng lượt quét QR</h3>
             <p id="stat-qr-total">0</p>
           </article>
-          <article class="card leaf">
-            <h3>POI được quét nhiều nhất</h3>
-            <p id="stat-qr-top-poi">N/A</p>
-          </article>
+        </section>
+
+        <section class="table-container">
+          <h2>5 POI được quét nhiều nhất</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên quầy</th>
+                <th>Lượt quét</th>
+              </tr>
+            </thead>
+            <tbody id="top-visited-poi-body"></tbody>
+          </table>
         </section>
 
         <section class="table-container">
