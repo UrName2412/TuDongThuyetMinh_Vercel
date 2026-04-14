@@ -3,7 +3,7 @@ export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiO
 // Optional: only allow these emails to access the admin UI.
 // Leave empty to allow any authenticated user.
 export const ADMIN_EMAIL_WHITELIST = [
-  "admin@admin.com"
+  //"admin@yourcompany.com"
 ];
 
 // Keep table names aligned with your Supabase schema.
