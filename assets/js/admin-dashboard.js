@@ -21,7 +21,10 @@ async function loadDashboard() {
   await requireAdmin();
   renderSidebar("dashboard");
 
-  const poiRes = await supabase.from(TABLES.POI).select("id,name,description,latitude,longitude,radius").order("id", { ascending: false });
+  // Force-revalidate data from the server by adding a unique query parameter
+  const revalidate = `t=${Date.now()}`;
+
+  const poiRes = await supabase.from(TABLES.POI).select(`id,name,description,latitude,longitude,radius,${revalidate}`).order("id", { ascending: false });
 
   if (poiRes.error) {
     alert(`Khong the tai dashboard. ${poiRes.error?.message || ""}`);
