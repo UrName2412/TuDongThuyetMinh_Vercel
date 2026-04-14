@@ -27,11 +27,33 @@ async function initPublicMap() {
       fillColor: "#fca5a5",
       fillOpacity: 0.2
     }).addTo(map);
+    marker.poiId = poi.id; // Gán ID vào marker để tìm kiếm sau này
     markers.push(marker);
   }
 
   if (markers.length > 0) {
     map.fitBounds(L.featureGroup(markers).getBounds().pad(0.2));
+  }
+
+  // --- Xử lý POI được quét từ QR ---
+  const scannedPoiId = localStorage.getItem("scannedPoiId");
+  if (scannedPoiId) {
+    console.log(`Found scanned POI ID: ${scannedPoiId}`);
+    const poiId = parseInt(scannedPoiId, 10);
+    const targetPoi = pois.find(p => p.id === poiId);
+    const targetMarker = markers.find(m => m.poiId === poiId);
+
+    if (targetPoi && targetMarker) {
+      // Zoom vào marker và mở popup
+      map.setView(targetMarker.getLatLng(), DEFAULT_MAP_ZOOM + 2);
+      targetMarker.openPopup();
+      console.log(`Focused on POI: ${targetPoi.name}`);
+    } else {
+      console.warn(`Scanned POI ID ${poiId} not found on the map.`);
+    }
+
+    // Xóa ID khỏi localStorage để không bị lặp lại khi tải lại trang
+    localStorage.removeItem("scannedPoiId");
   }
 }
 

@@ -54,14 +54,16 @@ export function showToast(message, type = "info") {
 }
 
 export async function requireAdmin() {
-  const { data, error } = await supabase.auth.getUser();
-  if (error || !data.user) {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+  const user = sessionData?.session?.user || null;
+
+  if (sessionError || !user) {
     window.location.href = "login.html";
     throw new Error("Unauthorized");
   }
 
   if (ADMIN_EMAIL_WHITELIST.length > 0) {
-    const email = (data.user.email || "").toLowerCase();
+    const email = (user.email || "").toLowerCase();
     const isAllowed = ADMIN_EMAIL_WHITELIST.map((item) => item.toLowerCase()).includes(email);
     if (!isAllowed) {
       await supabase.auth.signOut();
@@ -71,7 +73,7 @@ export async function requireAdmin() {
     }
   }
 
-  return data.user;
+  return user;
 }
 
 export function parseQuery() {

@@ -1,5 +1,5 @@
 import { requireAdmin, renderSidebar, showToast, sanitizeText, safeSetValue } from "./admin-common.js";
-import { initPickerMap, loadPoiDataset, updatePoiFromForm } from "./admin-poi-pages.js";
+import { initDraggablePickerMap, loadPoiDataset, updatePoiFromForm, buildPoiQrImageUrl, buildPoiQrScanUrl } from "./admin-poi-pages.js";
 
 async function init() {
   await requireAdmin();
@@ -30,9 +30,18 @@ async function init() {
 
   document.getElementById("current-image").innerHTML = imageRows.length > 0
     ? imageRows
-        .map((row) => `<a class="image-link" target="_blank" rel="noopener noreferrer" href="${sanitizeText(row.image_url || "")}"><img class="poi-thumbnail" src="${sanitizeText(row.image_url || "")}" alt="Ảnh POI"></a>`)
-        .join(" ")
+      .map((row) => `<a class="image-link" target="_blank" rel="noopener noreferrer" href="${sanitizeText(row.image_url || "")}"><img class="poi-thumbnail" src="${sanitizeText(row.image_url || "")}" alt="Ảnh POI"></a>`)
+      .join(" ")
     : (imageRow?.image_url ? `<img class="poi-thumbnail" src="${sanitizeText(imageRow.image_url)}" alt="Ảnh POI">` : "Chưa có ảnh.");
+
+  const qrImageUrl = buildPoiQrImageUrl(id, 180);
+  const qrScanUrl = buildPoiQrScanUrl(id);
+  document.getElementById("poi-qr-preview").innerHTML = `
+    <a class="image-link" target="_blank" rel="noopener noreferrer" href="${sanitizeText(qrScanUrl)}">
+      <img class="poi-thumbnail poi-qr-large" src="${sanitizeText(qrImageUrl)}" alt="QR ${sanitizeText(poi.name || "POI")}">
+    </a>
+    <a class="btn edit" target="_blank" rel="noopener noreferrer" href="${sanitizeText(qrScanUrl)}">Mở link scan</a>
+  `;
 
   // Đảm bảo DOM ready cho map
   await new Promise(resolve => {
@@ -43,7 +52,7 @@ async function init() {
     }
   });
 
-  initPickerMap("map", "poi-lat", "poi-lng", poi.latitude, poi.longitude);
+  initDraggablePickerMap("map", "poi-lat", "poi-lng", poi.latitude, poi.longitude);
 
   document.getElementById("poi-form").addEventListener("submit", async (event) => {
     event.preventDefault();

@@ -6,6 +6,7 @@
 2. Tao cac bang (giu ten giong app hien tai):
    - poi
    - Image
+   - PoiVisit
    - Tour
    - TourPoi
 3. Tao bucket storage: poi-images, dat la Public.
@@ -36,6 +37,7 @@ Sau do vao:
 - /admin/login.html
 - /admin/dashboard.html
 - /map/map.html
+- /map/scan.html?poi=1
 
 ## 4. Deploy len Vercel
 
@@ -61,3 +63,4 @@ vercel --prod
 - Khong can PHP runtime tren Vercel vi du an da la HTML + JS thuần.
 - Do dang dung anon key, can bat RLS va policy dung de bao ve du lieu.
 - De upload anh thanh cong, bucket poi-images phai public hoac policy read hop le.
+- Thiet lap SQL cho QR va luot truy cap theo huong dan trong docs/QR_VISIT_SETUP.md.

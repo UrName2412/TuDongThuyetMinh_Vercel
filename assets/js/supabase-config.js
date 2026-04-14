@@ -1,16 +1,19 @@
-export const SUPABASE_URL = "https://vkicutmxykziwygemslh.supabase.co";
-export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZraWN1dG14eWt6aXd5Z2Vtc2xoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MTc1NDAsImV4cCI6MjA5MDk5MzU0MH0.SVNFu7wpI-TTLRXDvAOX_KPRXIvX7TEQapi0DjNX2z0";
+export const SUPABASE_URL = "https://dzzstmszxyjekhkznldd.supabase.co";
+export const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR6enN0bXN6eHlqZWtoa3pubGRkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3MjIwMzcsImV4cCI6MjA5MTI5ODAzN30.TdFHdJNdk8_R5UAJq3mBJOK-NAGmKD2IoPzA6-ixo0o";
 
 // Optional: only allow these emails to access the admin UI.
 // Leave empty to allow any authenticated user.
 export const ADMIN_EMAIL_WHITELIST = [
-  // "admin@yourcompany.com"
+  "admin@gmail.com"
 ];
 
 // Keep table names aligned with your Supabase schema.
 export const TABLES = {
   POI: "poi",
-  IMAGE: "Image"
+  IMAGE: "Image",
+  POI_VISIT: "PoiVisit",
+  TOUR: "Tour",
+  TOUR_POI: "TourPoi"
 };
 
 // Storage bucket used for POI images.

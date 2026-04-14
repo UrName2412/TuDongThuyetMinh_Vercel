@@ -30,12 +30,12 @@ function getStoragePathFromPublicUrl(url) {
     // e.g., /storage/v1/object/public/images/poi/123/thumb.jpg -> poi/123/thumb.jpg
     const pathSegments = urlObject.pathname.split('/');
     const bucketNameIndex = pathSegments.indexOf(POI_IMAGE_BUCKET);
-    
+
     if (bucketNameIndex === -1 || bucketNameIndex + 1 >= pathSegments.length) {
       console.warn(`[DELETE] Could not find bucket '${POI_IMAGE_BUCKET}' in URL path: ${urlObject.pathname}`);
       return null;
     }
-    
+
     // Join the parts of the path *after* the bucket name
     const storagePath = pathSegments.slice(bucketNameIndex + 1).join('/');
     const decodedPath = decodeURIComponent(storagePath);
@@ -101,7 +101,7 @@ function openForm(title, poi = null) {
   safeSetValue("poi-radius", poi?.radius);
   safeSetValue("poi-classification", poi?.classification || "major");
   const minorEl = document.getElementById("poi-minor-category");
-  if (minorEl) minorEl.innerHTML = getMinorCategoryOptions(poi?.minor_category || ""); 
+  if (minorEl) minorEl.innerHTML = getMinorCategoryOptions(poi?.minor_category || "");
 
   const currentImage = document.getElementById("current-image");
   const imageUrl = state.imageMap.get(poi?.id)?.image_url || "";
@@ -118,18 +118,18 @@ function openForm(title, poi = null) {
       attribution: "&copy; OpenStreetMap contributors"
     }).addTo(state.map);
 
-  map.on("click", (event) => {
-    const pickedLat = event.latlng.lat;
-    const pickedLng = event.latlng.lng;
-    safeSetValue("poi-lat", pickedLat);
-    safeSetValue("poi-lng", pickedLng);
+    map.on("click", (event) => {
+      const pickedLat = event.latlng.lat;
+      const pickedLng = event.latlng.lng;
+      safeSetValue("poi-lat", pickedLat);
+      safeSetValue("poi-lng", pickedLng);
 
-    if (state.marker) {
-      state.marker.setLatLng([pickedLat, pickedLng]);
-    } else {
-      state.marker = L.marker([pickedLat, pickedLng]).addTo(state.map);
-    }
-  });
+      if (state.marker) {
+        state.marker.setLatLng([pickedLat, pickedLng]);
+      } else {
+        state.marker = L.marker([pickedLat, pickedLng]).addTo(state.map);
+      }
+    });
   } else {
     state.map.setView([lat, lng], DEFAULT_MAP_ZOOM + 1);
   }

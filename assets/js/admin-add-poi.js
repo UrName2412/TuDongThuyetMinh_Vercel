@@ -1,11 +1,11 @@
 import { requireAdmin, renderSidebar, showToast } from "./admin-common.js";
-import { createPoiFromForm, initPickerMap } from "./admin-poi-pages.js";
+import { createPoiFromForm, initDraggablePickerMap } from "./admin-poi-pages.js";
 
 async function init() {
   await requireAdmin();
   renderSidebar("list");
 
-  initPickerMap("map", "poi-lat", "poi-lng");
+  initDraggablePickerMap("map", "poi-lat", "poi-lng");
 
   document.getElementById("poi-form").addEventListener("submit", async (event) => {
     event.preventDefault();

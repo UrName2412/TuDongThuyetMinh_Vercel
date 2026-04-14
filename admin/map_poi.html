@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +8,14 @@
   <link rel="stylesheet" href="../assets/style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
+
 <body>
   <div class="admin">
     <aside id="admin-sidebar" class="sidebar"></aside>
 
     <main class="content">
       <div class="main-content">
-        <div id="map" style="height:600px;"></div>
+        <div id="map" style="height: calc(100vh - 40px); border-radius: 10px;"></div>
       </div>
     </main>
   </div>
@@ -21,4 +23,5 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script type="module" src="../assets/js/admin-map.js"></script>
 </body>
+
 </html>

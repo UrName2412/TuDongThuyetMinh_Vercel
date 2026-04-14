@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard</title>
   <link rel="stylesheet" href="../assets/style.css">
 </head>
+
 <body>
   <div class="admin">
     <aside id="admin-sidebar" class="sidebar"></aside>
@@ -25,6 +27,14 @@
             <h3>Radius lớn nhất</h3>
             <p id="stat-radius-max">0 m</p>
           </article>
+          <article class="card sky">
+            <h3>Tổng lượt quét QR</h3>
+            <p id="stat-qr-total">0</p>
+          </article>
+          <article class="card leaf">
+            <h3>POI được quét nhiều nhất</h3>
+            <p id="stat-qr-top-poi">N/A</p>
+          </article>
         </section>
 
         <section class="table-container">
@@ -36,6 +46,8 @@
                 <th>Tên quầy</th>
                 <th>Mô tả</th>
                 <th>Ảnh</th>
+                <th>Lượt quét</th>
+                <th>Quét gần nhất</th>
                 <th>Vĩ độ</th>
                 <th>Kinh độ</th>
                 <th>Bán kính</th>
@@ -50,4 +62,5 @@
 
   <script type="module" src="../assets/js/admin-dashboard.js"></script>
 </body>
+
 </html>
