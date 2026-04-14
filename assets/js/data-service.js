@@ -73,12 +73,18 @@ export async function recordPoiVisit(poiId, source = "qr") {
   }
 
   const currentVisit = Number(poiRow[visitField] || 0);
-  const { error: poiUpdateError } = await supabase
+  const nextVisit = Number.isFinite(currentVisit) ? currentVisit + 1 : 1;
+  const { data: updatedPoiRow, error: poiUpdateError } = await supabase
     .from(TABLES.POI)
-    .update({ [visitField]: currentVisit + 1 })
-    .eq("id", id);
+    .update({ [visitField]: nextVisit })
+    .eq("id", id)
+    .select(`id,${visitField}`)
+    .maybeSingle();
 
   if (poiUpdateError) throw poiUpdateError;
+  if (!updatedPoiRow) {
+    throw new Error("Khong cap nhat duoc bo dem PoiVisit. Kiem tra RLS/policy UPDATE cho bang poi.");
+  }
 
   // Keep detailed visit log when table exists, but do not block check-in if this step fails.
   const payload = {
