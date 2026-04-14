@@ -53,13 +53,37 @@ export async function getImageRowsByPoiIds(poiIds) {
 }
 
 export async function recordPoiVisit(poiId, source = "qr") {
+  const id = Number(poiId);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new Error("POI ID khong hop le");
+  }
+
+  const { data: poiRow, error: poiReadError } = await supabase
+    .from(TABLES.POI)
+    .select("id,PoiVisit")
+    .eq("id", id)
+    .maybeSingle();
+
+  if (poiReadError) throw poiReadError;
+  if (!poiRow) throw new Error("POI khong ton tai");
+
+  const currentVisit = Number(poiRow.PoiVisit || 0);
+  const { error: poiUpdateError } = await supabase
+    .from(TABLES.POI)
+    .update({ PoiVisit: currentVisit + 1 })
+    .eq("id", id);
+
+  if (poiUpdateError) throw poiUpdateError;
+
+  // Keep detailed visit log when table exists, but do not block check-in if this step fails.
   const payload = {
-    poi_id: Number(poiId),
+    poi_id: id,
     source
   };
-
-  const { error } = await supabase.from(TABLES.POI_VISIT).insert(payload);
-  if (error) throw error;
+  const { error: logInsertError } = await supabase.from(TABLES.POI_VISIT).insert(payload);
+  if (logInsertError) {
+    console.warn("[recordPoiVisit] Insert PoiVisit log failed:", logInsertError.message || logInsertError);
+  }
 }
 
 export async function getPoiVisitStats(poiIds) {
