@@ -1,7 +1,7 @@
 import { supabase } from "./supabase-client.js";
 import { TABLES } from "./supabase-config.js";
 import { requireAdmin, renderSidebar, formatNumber, sanitizeText } from "./admin-common.js";
-import { getImagesByPoiIds, getPoiVisitStats } from "./data-service.js";
+import { getPoiVisitStats } from "./data-service.js";
 
 function formatDateTime(value) {
   if (!value) return "-";
@@ -29,7 +29,6 @@ async function loadDashboard() {
   }
 
   const pois = poiRes.data || [];
-  const imageMap = await getImagesByPoiIds(pois.map((item) => item.id));
   const visitStats = await getPoiVisitStats(pois.map((item) => item.id));
 
   document.getElementById("stat-poi-total").textContent = formatNumber(pois.length);
@@ -49,30 +48,6 @@ async function loadDashboard() {
         <td>${poi.id}</td>
         <td>${sanitizeText(poi.name)}</td>
         <td>${formatNumber(poi.visitCount)}</td>
-      </tr>
-    `;
-  }).join("");
-
-  const poiBody = document.getElementById("recent-poi-body");
-  poiBody.innerHTML = pois.slice(0, 5).map((poi) => {
-    const img = imageMap.get(poi.id)?.image_url || "";
-    const imageCell = img
-      ? `<a class="image-link" target="_blank" rel="noopener noreferrer" href="${sanitizeText(img)}"><img class="poi-thumbnail" src="${sanitizeText(img)}" alt="${sanitizeText(poi.name)}"></a>`
-      : "-";
-    const visitCount = visitStats.countByPoiId.get(Number(poi.id)) || 0;
-    const latestVisit = visitStats.latestByPoiId.get(Number(poi.id));
-
-    return `
-      <tr>
-        <td>${poi.id}</td>
-        <td>${sanitizeText(poi.name)}</td>
-        <td>${sanitizeText(poi.description || "")}</td>
-        <td>${imageCell}</td>
-        <td>${formatNumber(visitCount)}</td>
-        <td>${sanitizeText(formatDateTime(latestVisit))}</td>
-        <td>${poi.latitude}</td>
-        <td>${poi.longitude}</td>
-        <td>${poi.radius} m</td>
       </tr>
     `;
   }).join("");
