@@ -86,13 +86,14 @@ export function formatNumber(value) {
 }
 
 export function sanitizeText(value) {
-  return String(value ?? "").replace(/[&<>\\"']/g, (ch) => {
+  return String(value ?? "").replace(/[&<>"'\\]/g, (ch) => {
     const map = {
       '&': '&amp;',
-      '<': '<',
-      '>': '>',
-      '"': '"',
-      "'": '&#39;'
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+      '\\': '&#92;'
     };
     return map[ch];
   });

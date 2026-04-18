@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { pathToFileURL } from "node:url";
 
-const REPO_ROOT = "/home/runner/work/TuDongThuyetMinh_Vercel/TuDongThuyetMinh_Vercel";
+const REPO_ROOT = process.cwd();
 const ADMIN_COMMON_URL = pathToFileURL(`${REPO_ROOT}/assets/js/admin-common.js`).href;
 
 const authState = {
@@ -144,5 +144,5 @@ test("showToast appends styled toast and removes it after timeout", () => {
 });
 
 test("sanitizeText transforms special characters", () => {
-  assert.equal(sanitizeText(`A&B<>'"`), `A&amp;B<>&#39;"`);
+  assert.equal(sanitizeText(`A&B<>'"\\`), `A&amp;B&lt;&gt;&#39;&quot;&#92;`);
 });

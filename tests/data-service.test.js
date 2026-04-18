@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { pathToFileURL } from "node:url";
 
-const REPO_ROOT = "/home/runner/work/TuDongThuyetMinh_Vercel/TuDongThuyetMinh_Vercel";
+const REPO_ROOT = process.cwd();
 const DATA_SERVICE_URL = pathToFileURL(`${REPO_ROOT}/assets/js/data-service.js`).href;
 
 function createSupabaseMock() {
