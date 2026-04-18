@@ -1,0 +1,9 @@
+{
+  "name": "tudongthuyetminh-vercel",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test --test-concurrency=1",
+    "test:coverage": "node --test --test-concurrency=1 --experimental-test-coverage"
+  }
+}
