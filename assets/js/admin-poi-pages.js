@@ -3,15 +3,14 @@ import { POI_IMAGE_BUCKET, TABLES, DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "
 import { sanitizeText, showToast, safeGetValue } from "./admin-common.js";
 import { getImagesByPoiIds, getImageRowsByPoiIds, getPois } from "./data-service.js";
 
-export function buildPoiQrScanUrl(poiId, baseUrl = window.location.origin) {
-  const url = new URL("/map/scan.html", baseUrl);
-  url.searchParams.set("poi", String(poiId));
-  return url.toString();
+export function buildPoiQrScanUrl(poiId) {
+  // Return only the POI ID as the QR value
+  return String(poiId);
 }
 
 export function buildPoiQrImageUrl(poiId, size = 140) {
-  const scanUrl = buildPoiQrScanUrl(poiId);
-  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(scanUrl)}`;
+  // Use the POI ID directly as the QR data
+  return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(poiId)}`;
 }
 
 export async function loadPoiDataset() {
