@@ -1,30 +1,5 @@
 import { sanitizeText } from "./admin-common.js";
-import { getPoiById, recordPoiVisit } from "./data-service.js";
-
-const QR_CHECKIN_COOLDOWN_MS = 30000;
-
-function getVisitCacheKey(poiId) {
-    return `qr_checkin_last_${poiId}`;
-}
-
-function canRecordVisit(poiId) {
-    try {
-        const key = getVisitCacheKey(poiId);
-        const lastVisit = Number(localStorage.getItem(key) || "0");
-        if (!lastVisit) return true;
-        return Date.now() - lastVisit >= QR_CHECKIN_COOLDOWN_MS;
-    } catch (_) {
-        return true;
-    }
-}
-
-function markVisitRecorded(poiId) {
-    try {
-        localStorage.setItem(getVisitCacheKey(poiId), String(Date.now()));
-    } catch (_) {
-        // Ignore storage errors to avoid blocking check-in flow.
-    }
-}
+import { getPoiById } from "./data-service.js";
 
 async function initPoiScanPage() {
     const statusEl = document.getElementById("scan-status");
@@ -45,13 +20,7 @@ async function initPoiScanPage() {
     }
 
     nameEl.innerHTML = `<strong>${sanitizeText(poi.name || "POI")}</strong>`;
-    if (canRecordVisit(poiId)) {
-        await recordPoiVisit(poiId, "qr_web");
-        markVisitRecorded(poiId);
-        statusEl.textContent = `Da ghi nhan luot truy cap QR cho ${sanitizeText(poi.name || "POI")}.`;
-    } else {
-        statusEl.textContent = `Ban vua quet POI ${sanitizeText(poi.name || "POI")} gan day. He thong khong cong them luot trong 30 giay.`;
-    }
+    statusEl.textContent = `Scan QR thanh cong cho ${sanitizeText(poi.name || "POI")}.`;
 
     const fallbackMapUrl = `${window.location.origin}/map/map.html`;
     mapLinkEl.href = poi.map_link || fallbackMapUrl;

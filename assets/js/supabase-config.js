@@ -10,7 +10,6 @@ export const ADMIN_EMAIL_WHITELIST = [
 export const TABLES = {
   POI: "poi",
   IMAGE: "Image",
-  POI_VISIT: "PoiVisit",
   TOUR: "Tour",
   TOUR_POI: "TourPoi"
 };
