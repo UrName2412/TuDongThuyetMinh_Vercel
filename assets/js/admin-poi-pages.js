@@ -8,7 +8,7 @@ export function buildPoiQrScanUrl(poiId) {
   return String(poiId);
 }
 
-export function buildPoiQrImageUrl(poiId, size = 140) {
+export function buildPoiQrImageUrl(poiId, size = 500) {
   // Use the POI ID directly as the QR data
   return `https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(poiId)}`;
 }
