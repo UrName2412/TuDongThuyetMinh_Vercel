@@ -42,12 +42,13 @@ async function loadDashboard() {
   }
 
   const pois = poiRes.data || [];
+
   document.getElementById("stat-poi-total").textContent = formatNumber(pois.length);
 
-  const sortedPoisByVisits = pois;
-
+  // Lấy 5 POI được thêm gần đây (id giảm dần)
+  const recentPois = pois.slice(0, 5);
   const topVisitedPoiBody = document.getElementById("top-visited-poi-body");
-  topVisitedPoiBody.innerHTML = sortedPoisByVisits.slice(0, 5).map((poi) => {
+  topVisitedPoiBody.innerHTML = recentPois.map((poi) => {
     return `
       <tr>
         <td>${poi.id}</td>
