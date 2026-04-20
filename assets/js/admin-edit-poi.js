@@ -27,6 +27,7 @@ async function init() {
   safeSetValue("poi-lng", poi.longitude);
   safeSetValue("poi-radius", poi.radius);
   safeSetValue("poi-map-link", poi.map_link);
+  safeSetValue("preference", poi.preference);
 
   document.getElementById("current-image").innerHTML = imageRows.length > 0
     ? imageRows

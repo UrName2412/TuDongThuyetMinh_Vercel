@@ -40,6 +40,7 @@ export function renderPoiRows(pois, imageMap) {
         <td>${poi.latitude ?? ""}</td>
         <td>${poi.longitude ?? ""}</td>
         <td>${poi.radius ?? 0} m</td>
+        <td>${poi.preference ?? 0}</td>
         <td>
           <a class="btn edit" href="edit_poi.html?id=${poi.id}">Sửa</a>
           <button class="btn delete" data-delete-id="${poi.id}">Xóa</button>
@@ -315,7 +316,8 @@ export async function createPoiFromForm() {
     latitude: lat,
     longitude: lng,
     radius: Number(radiusRaw),
-    map_link: safeGetValue("poi-map-link") || null
+    map_link: safeGetValue("poi-map-link") || null,
+    preference: Number(safeGetValue("preference") || "0")
   };
 
   console.log("[POI INSERT]", payload);
@@ -346,7 +348,8 @@ export async function updatePoiFromForm(poiId) {
     latitude: Number(safeGetValue("poi-lat")),
     longitude: Number(safeGetValue("poi-lng")),
     radius: Number(safeGetValue("poi-radius")),
-    map_link: safeGetValue("poi-map-link") || null
+    map_link: safeGetValue("poi-map-link") || null,
+    preference: Number(safeGetValue("preference") || "0")
   };
 
   if (!payload.name || Number.isNaN(payload.latitude) || Number.isNaN(payload.longitude) || Number.isNaN(payload.radius)) {
