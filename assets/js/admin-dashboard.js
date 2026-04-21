@@ -87,8 +87,8 @@ function updateOnlineCount() {
       if (metas?.metas) return sum + metas.metas.length;
       return sum + 1;
     }, 0);
-    const fakecount = onlineCount + 50;
-    onlineUsersCountElement.textContent = fakecount;
+
+    onlineUsersCountElement.textContent = onlineCount;
   }
 }
 
