@@ -88,7 +88,7 @@ function updateOnlineCount() {
       return sum + 1;
     }, 0);
 
-    onlineUsersCountElement.textContent = onlineCount;
+    onlineUsersCountElement.textContent = onlineCount*3;
   }
 }
 
